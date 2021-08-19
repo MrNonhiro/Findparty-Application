@@ -26,7 +26,7 @@ import received from './components/loggedin/statusPage/received';
 {
   // store user page
 }
-import homepage from './components/loggedin/storeUser/homepage';
+import homepage from './components/storeUser/homepage';
 
 
 import { NavigationContainer } from '@react-navigation/native';

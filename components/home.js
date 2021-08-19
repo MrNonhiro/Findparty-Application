@@ -13,7 +13,6 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 
-const List = [0, 1, 2, 3, 4, 5];
 export default function Home({ navigation }) {
   const [info, setInfo] = useState([]);
   useEffect(() => {
@@ -76,7 +75,7 @@ export default function Home({ navigation }) {
                 style={{ marginTop: -40 }}
                 data={info}
                 numColumns={2}
-                keyExtractor={(item) => item}
+                keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                   <TouchableOpacity onPress={() => navigation.navigate('partypage', { id: item.party_id })}>
                     <View style={styles.insidegoodsbox} elevation={5}>

@@ -17,7 +17,7 @@ const nologinpage = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.box}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../images/back.png')} style={{ height: 40, width: 40, marginTop: 19 }} />
+          <Image source={require('../../images/back.png')} style={{ height: 40, width: 40, marginTop: 19 }} />
         </TouchableOpacity>
         <Text style={styles.text}> Fashion men shop  </Text>
       </View>
@@ -26,7 +26,7 @@ const nologinpage = ({ navigation }) => {
       }
       <View style={{ flex: 2 }}>
         <View style={styles.box2}>
-          <Image source={require('../../../images/shirt1.jpg')} style={styles.image} />
+          <Image source={require('../../images/shirt1.jpg')} style={styles.image} />
           <Text style={styles.text2}> Fashion men shop </Text>
         </View>
       </View>
@@ -45,18 +45,18 @@ const nologinpage = ({ navigation }) => {
               renderItem={({ item }) => (
                 <TouchableOpacity onPress={() => navigation.navigate('partypage')}>
                   <View style={styles.insidegoodsbox} elevation={5}>
-                    <Image source={require('../../../images/shirt1.jpg')} style={styles.goodsimage} />
+                    <Image source={require('../../images/shirt1.jpg')} style={styles.goodsimage} />
                     <Text style={{ fontSize: 15 }}> เสื้อแฟชัน sleeveless </Text>
                     <View style={{ flexDirection: 'row' }}>
                       <Text style={{ fontSize: 15, color: 'red' }}> 150 B </Text>
                       <Text style={{ fontSize: 15, color: 'black' }}> / คน </Text>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
-                      <Image source={require('../../../images/shirt1.jpg')} style={styles.goodslogo} />
+                      <Image source={require('../../images/shirt1.jpg')} style={styles.goodslogo} />
                       <Text style={{ fontSize: 13, textAlign: 'center', paddingTop: 8 }}> Fashion men shop </Text>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
-                      <Image source={require('../../../images/user.png')} style={styles.goodslogo} />
+                      <Image source={require('../../images/user.png')} style={styles.goodslogo} />
                       <Text style={{ fontSize: 13, textAlign: 'center', paddingTop: 8 }}> หารกัน 3 ชิ้น </Text>
                     </View>
                   </View>
