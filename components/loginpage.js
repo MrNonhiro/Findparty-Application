@@ -57,7 +57,7 @@ export default function loginpage({ navigation }) {
           </View>
           <View style={styles.searchbar}>
             <Image source={require('../images/password.png')} style={styles.userimage} />
-            <TextInput style={styles.placeholder} placeholder="Password" onChangeText={(text) => setuser_Password(text)} />
+            <TextInput style={styles.placeholder} placeholder="Password" keyboardType='numberic' onChangeText={(text) => setuser_Password(text)} />
           </View>
           <View style={styles.buttombox}>
             <Text style={{ alignSelf: 'center', alignSelf: 'flex-end', marginRight: '10%', marginTop: '2%' }}> ลืมรหัสผ่าน? </Text>

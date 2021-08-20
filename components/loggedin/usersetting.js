@@ -169,12 +169,6 @@ const styles = StyleSheet.create({
         marginTop: '5%',
         marginLeft: '8%'
     },
-    text2: {
-        fontSize: 20,
-        color: 'black',
-        fontWeight: 'bold',
-        marginTop: '3%'
-    },
     image: {
         width: '50%',
         height: '100%',

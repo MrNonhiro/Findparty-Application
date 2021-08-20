@@ -22,7 +22,7 @@ const register = ({ navigation }) => {
           </View>
           <View style={styles.searchbar}>
             <Image source={require('../images/password.png')} style={styles.userimage} />
-            <TextInput style={styles.placeholder} placeholder="Password" />
+            <TextInput style={styles.placeholder} placeholder="Password" keyboardType='numberic'/>
           </View>
           <View style={styles.buttombox}>
             <Text onPress={() => navigation.navigate('registerStore')} style={{ alignSelf: 'center', marginBottom: '1%' }}> สมัครสมาชิกร้านค้า? </Text>
