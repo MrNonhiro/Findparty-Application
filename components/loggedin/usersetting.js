@@ -10,6 +10,7 @@ import {
     Dimensions
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function usersetting({ navigation }) {
     const [pickedImagePath, setPickedImagePath] = useState('');
@@ -53,83 +54,89 @@ export default function usersetting({ navigation }) {
         }
     }
 
-    const [animation, setAnimation] = useState(new Animated.Value(0));
-    const { height } = Dimensions.get("window");
-
-    const openModal = animation.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, 1],
-        extrapolate: "clamp",
-    });
-    const saveModal = animation.interpolate({
-        inputRange: [1, 2],
-        outputRange: [0, -height],
-        extrapolate: "clamp",
-    });
-    const modalTrigger = () => {
-        Animated.timing(animation, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: false
-        }).start();
-    };
-    const close = () => {
-        Animated.timing(animation, {
-            toValue: 0,
-            duration: 500,
-            useNativeDriver: false
-        }).start();
-    };
-    const open = {
-        transform: [
-            { scale: openModal },
-            { translateY: saveModal }
-        ]
-    };
-
     return (
         <View style={styles.container}>
             <View style={styles.box}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image source={require('../../images/back.png')} style={{ height: 40, width: 40, marginTop: 19 }} />
+                    <Image source={require('../../images/back.png')} style={{ height: 25, width: 25, marginTop: 26,tintColor: 'white' }} />
                 </TouchableOpacity>
                 <Text style={styles.text}> แก้ไขข้อมูลส่วนตัว  </Text>
             </View>
+            <View style={{
+                flex: 1,
+                width: '90%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                alignSelf: 'center',
+            }}>
+                <View style={styles.profileImageBox}>
+                    {
+                        pickedImagePath !== '' && <Image
+                            source={{ uri: pickedImagePath }}
+                            style={styles.profileimage}
+                        />
+                    }
+                    <View style={{ flexDirection: 'row' }}>
+                        <View style={{ flexDirection: 'row', marginTop: 15 }}>
+                            <TouchableOpacity onPress={showImagePicker}>
+                                <View style={{
+                                    backgroundColor: '#041955',
+                                    height: 40,
+                                    width: 120,
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    borderRadius: 15
+                                }}>
+                                    <Image source={require('../../images/gallery.png')} style={{ height: 25, width: 25, marginTop: 8 }} />
+                                    <Text style={{
+                                        fontSize: 20,
+                                        color: 'white',
+                                        alignSelf: 'center'
+                                    }}> แกลลอรี่ </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
 
-            { // Profile picture and name
-            }
-            <View style={styles.profileImageBox}>
-                {
-                    pickedImagePath !== '' && <Image
-                        source={{ uri: pickedImagePath }}
-                        style={styles.profileimage}
-                    />
-                }
-                <TouchableOpacity style={styles.mainButton} onPress={modalTrigger}>
-                    <View style={styles.box2} elevation={5}>
-                        <Image source={require('../../images/photoEditor.png')} style={{ height: 30, width: 30, tintColor: 'black' }} />
+                        <View style={{ flexDirection: 'row', marginTop: 15, marginLeft: 10 }}>
+                            <TouchableOpacity onPress={openCamera}>
+                                <View style={{
+                                    backgroundColor: '#041955',
+                                    height: 40,
+                                    width: 100,
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    borderRadius: 15
+                                }}>
+                                    <Image source={require('../../images/camera.png')} style={{ height: 25, width: 25, marginTop: 8 }} />
+                                    <Text style={{
+                                        fontSize: 20,
+                                        color: 'white',
+                                        alignSelf: 'center'
+                                    }}> กล้อง </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.center}>
-                <Animated.View style={[open]}>
-                    <View style={styles.wrap}>
-                        <TouchableOpacity style={styles.modalButton} onPress={showImagePicker}>
-                            <Text style={styles.modalText}> เลือกรูปภาพ </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.modalButton} onPress={openCamera}>
-                            <Text style={styles.modalText}> เปิดกล้อง </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ alignSelf: 'center', marginBottom: 5 }} onPress={close}>
-                            <Image source={require('../../images/close.png')} style={{ height: 30, width: 30, tintColor: 'red' }} />
-                        </TouchableOpacity>
+                </View>
+                <ScrollView>
+                    <View style={{
+                        height: 40,
+                        width: 150,
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        borderRadius: 15,
+                        marginTop: 30
+                    }}>
+                        <Text style={{
+                            fontSize: 25,
+                            color: 'white',
+                            
+                        }}> ข้อมูลส่วนตัว </Text>
                     </View>
-                </Animated.View>
-            </View>
-            { // Goods status bar
-            }
-            <View style={styles.userDetail}>
-                <Text> Waranon Techa </Text>
+                    <View style={styles.detailView}>
+                        <Text> Waranon Techa </Text>
+                    </View>
+                </ScrollView>
             </View>
         </View>
     )
@@ -139,14 +146,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: '10%',
-        backgroundColor: '#E5E5E5',
+        backgroundColor: '#3450a1',
     },
     box: {
         height: 100,
         padding: 10,
-        backgroundColor: '#00B900',
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
+        backgroundColor: '#3450a1',
+        borderBottomLeftRadius: 25,
+        borderBottomRightRadius: 25,
         flexDirection: 'row',
     },
     box2: {
@@ -166,30 +173,13 @@ const styles = StyleSheet.create({
         fontSize: 30,
         color: 'white',
         textAlign: 'center',
-        marginTop: '5%',
-        marginLeft: '8%'
+        marginLeft: '11%',
+        marginTop: '4.5%'
     },
     image: {
         width: '50%',
         height: '100%',
         borderRadius: 120,
-    },
-    mainButton: {
-        width: 50,
-        height: 40,
-        borderRadius: 100,
-        backgroundColor: 'white',
-        borderColor: 'black',
-        borderWidth: 0.5,
-        shadowColor: 'black',
-        shadowOffset: {
-            width: 6.5,
-            height: 6.5,
-        },
-        shadowOpacity: 0.5,
-        shadowRadius: 20,
-        elevation: 10,
-        marginLeft: '30%',
     },
     profileImageBox: {
         height: '35%',
@@ -204,23 +194,6 @@ const styles = StyleSheet.create({
         marginTop: '5%',
         elevation: 5
     },
-    center: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 20
-    },
-    wrap: {
-        borderRadius: 8,
-        backgroundColor: "black",
-        shadowColor: "#4049BF",
-        shadowOffset: {
-            width: 6.5,
-            height: 6.5,
-        },
-        shadowOpacity: 0.5,
-        shadowRadius: 20,
-        elevation: 10
-    },
     modalButton: {
         backgroundColor: "transparent",
         borderColor: "#ffffff",
@@ -233,13 +206,8 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginRight: 10
     },
-    modalText: {
-        fontSize: 30,
-        color: 'white',
-    },
-    userDetail: {
-        flex: 2,
-        backgroundColor: 'green'
+    detailView: {
+        flexDirection: 'row'
     }
 })
     ;
