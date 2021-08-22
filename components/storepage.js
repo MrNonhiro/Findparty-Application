@@ -7,20 +7,33 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
-  Dimensions,
-  ImageStore
-} from 'react-native'
+} from 'react-native';
+import { Header } from 'react-native-elements'
 
 const list = [0, 1, 2, 3, 4, 5];
 const nologinpage = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <View style={styles.box}>
-        <TouchableOpacity onPress={() => navigation.navigate('partypage')}>
-          <Image source={require('../images/back.png')} style={{ height: 40, width: 40, marginTop: 19 }} />
-        </TouchableOpacity>
-        <Text style={styles.text}> Fashion men shop  </Text>
-      </View>
+      <Header
+        leftComponent={
+          <View style={{ marginTop: '8%' }}>
+            <TouchableOpacity
+              onPress={() => { navigation.navigate('partypage')}}>
+              <Image source={require('../images/back.png')} style={{
+                height: 25,
+                width: 25,
+                tintColor: 'black',
+              }} />
+            </TouchableOpacity>
+          </View>}
+        centerComponent={{ text: 'ข้อมูลส่วนตัว', style: { color: 'black', fontSize: 25 } }}
+        containerStyle={{
+          backgroundColor: 'white',
+          height: '18%',
+          borderBottomLeftRadius: 20,
+          borderBottomRightRadius: 20
+        }}
+      />
 
       { // header 
       }

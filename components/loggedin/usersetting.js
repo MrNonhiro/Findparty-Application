@@ -7,10 +7,12 @@ import {
     TouchableOpacity,
     Button,
     Animated,
-    Dimensions
+    Dimensions,
+    TextInput
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { ScrollView } from 'react-native-gesture-handler';
+import { Header } from 'react-native-elements'
 
 export default function usersetting({ navigation }) {
     const [pickedImagePath, setPickedImagePath] = useState('');
@@ -56,18 +58,32 @@ export default function usersetting({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <View style={styles.box}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image source={require('../../images/back.png')} style={{ height: 25, width: 25, marginTop: 26,tintColor: 'white' }} />
-                </TouchableOpacity>
-                <Text style={styles.text}> แก้ไขข้อมูลส่วนตัว  </Text>
-            </View>
+            <Header
+                leftComponent={
+                    <View style={{ marginTop: '8%' }}>
+                        <TouchableOpacity
+                            onPress={() => { navigation.goBack() }}>
+                            <Image source={require('../../images/back.png')} style={{
+                                height: 25,
+                                width: 25,
+                                tintColor: 'black',
+                            }} />
+                        </TouchableOpacity>
+                    </View>}
+                centerComponent={{ text: 'แก้ไขข้อมูลส่วนตัว', style: { color: 'black', fontSize: 25 } }}
+                containerStyle={{
+                    backgroundColor: 'white',
+                    height: '18%',
+                    borderBottomLeftRadius: 20,
+                    borderBottomRightRadius: 20
+                }}
+            />
             <View style={{
                 flex: 1,
-                width: '90%',
-                justifyContent: 'center',
+                width: '100%',
                 alignItems: 'center',
                 alignSelf: 'center',
+                marginBottom: '8%'
             }}>
                 <View style={styles.profileImageBox}>
                     {
@@ -80,7 +96,7 @@ export default function usersetting({ navigation }) {
                         <View style={{ flexDirection: 'row', marginTop: 15 }}>
                             <TouchableOpacity onPress={showImagePicker}>
                                 <View style={{
-                                    backgroundColor: '#041955',
+                                    backgroundColor: '#6359d5',
                                     height: 40,
                                     width: 120,
                                     flexDirection: 'row',
@@ -100,7 +116,7 @@ export default function usersetting({ navigation }) {
                         <View style={{ flexDirection: 'row', marginTop: 15, marginLeft: 10 }}>
                             <TouchableOpacity onPress={openCamera}>
                                 <View style={{
-                                    backgroundColor: '#041955',
+                                    backgroundColor: '#6359d5',
                                     height: 40,
                                     width: 100,
                                     flexDirection: 'row',
@@ -118,43 +134,95 @@ export default function usersetting({ navigation }) {
                         </View>
                     </View>
                 </View>
-                <ScrollView>
-                    <View style={{
-                        height: 40,
-                        width: 150,
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        borderRadius: 15,
-                        marginTop: 30
-                    }}>
-                        <Text style={{
-                            fontSize: 25,
-                            color: 'white',
-                            
-                        }}> ข้อมูลส่วนตัว </Text>
+                <View style={{
+                    height: 20,
+                    marginTop: '20%',
+                    marginBottom: 10,
+                    alignSelf: 'flex-start'
+                }}>
+                    <Text style={{
+                        fontSize: 20,
+                        color: 'black',
+
+                    }}> ข้อมูลส่วนตัว </Text>
+                </View>
+                    <View style={styles.detailView}>
+                        <Image source={require('../../images/user.png')} style={styles.userimage} />
+                        <Text style={styles.detailFont}> ชื่อ </Text>
+                        <TextInput style={{
+                            fontSize: 15,
+                            color: '#808080',
+                            alignSelf: 'center',
+                            marginLeft: '26%'
+                        }}> ชื่อ display </TextInput>
                     </View>
                     <View style={styles.detailView}>
-                        <Text> Waranon Techa </Text>
+                        <Image source={require('../../images/phone.png')} style={styles.userimage} />
+                        <Text style={styles.detailFont}> เบอร์โทรศัพท์ </Text>
+                        <TextInput style={{
+                            fontSize: 15,
+                            color: '#808080',
+                            alignSelf: 'center',
+                            marginLeft: '8%'
+                        }}> ชื่อ display </TextInput>
                     </View>
-                </ScrollView>
+                    <View style={styles.detailView}>
+                        <Image source={require('../../images/emailuser.png')} style={styles.userimage} />
+                        <Text style={styles.detailFont}> อีเมลล์ </Text>
+                        <TextInput maxLength={23}
+                            style={{
+                                fontSize: 15,
+                                color: '#808080',
+                                alignSelf: 'center',
+                                marginLeft: '21%'
+                            }}> non.hiroki@hotmail.com </TextInput>
+                    </View>
+                    <TouchableOpacity onPress={() => navigation.navigate('useraddressEdit')}>
+                        <View style={styles.detailView}>
+                            <Image source={require('../../images/address.png')} style={styles.userimage} />
+                            <Text style={styles.detailFont}> ที่อยู่ </Text>
+                            <Text
+                                style={{
+                                    fontSize: 15,
+                                    color: '#808080',
+                                    alignSelf: 'center',
+                                    marginLeft: '9%'
+                                }}> 111/1 บรรพปราการ เวียง เมือง เชียงราย </Text>
+                        </View>
+                    </TouchableOpacity>
+
+                    {/* when click this, it will insert data into user table */}
+                    <TouchableOpacity onPress={() => navigation.navigate('userpage')}>
+                        <View style={{
+                            marginTop: '6%',
+                            elevation: 10
+                        }}>
+                            <Image source={require('../../images/correct.png')} style={{
+                                height: 50,
+                                width: 50,
+                                alignSelf: 'center'
+                            }} />
+                        </View>
+                    </TouchableOpacity>
             </View>
         </View>
+
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: '10%',
-        backgroundColor: '#3450a1',
+        backgroundColor: 'white',
     },
     box: {
         height: 100,
         padding: 10,
-        backgroundColor: '#3450a1',
+        backgroundColor: 'white',
         borderBottomLeftRadius: 25,
         borderBottomRightRadius: 25,
         flexDirection: 'row',
+        marginTop: '10%'
     },
     box2: {
         alignItems: 'center',
@@ -164,50 +232,46 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         marginTop: '5%'
     },
-    editProfile: {
-        width: '20%',
-        height: '50%',
-        borderRadius: 80,
-    },
     text: {
         fontSize: 30,
-        color: 'white',
+        color: 'black',
         textAlign: 'center',
         marginLeft: '11%',
         marginTop: '4.5%'
     },
-    image: {
-        width: '50%',
-        height: '100%',
-        borderRadius: 120,
-    },
     profileImageBox: {
         height: '35%',
         width: '100%',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     profileimage: {
         width: '50%',
-        height: '75%',
+        height: '90%',
         borderRadius: 120,
         resizeMode: 'cover',
-        marginTop: '5%',
-        elevation: 5
-    },
-    modalButton: {
-        backgroundColor: "transparent",
-        borderColor: "#ffffff",
-        borderRadius: 100,
-        marginTop: 20,
-        borderWidth: 1,
-        alignItems: 'center',
-        marginBottom: 10,
-        marginTop: 10,
-        marginLeft: 10,
-        marginRight: 10
+        marginTop: '5%'
     },
     detailView: {
-        flexDirection: 'row'
-    }
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        height: 50,
+        width: '100%',
+        marginTop: '4%',
+        alignItems: 'center',
+        borderRadius: 15,
+        elevation: 5
+    },
+    detailFont: {
+        fontSize: 15,
+        color: 'black',
+        alignSelf: 'center',
+        marginLeft: 10
+    },
+    userimage: {
+        height: '55%',
+        width: '8%',
+        marginLeft: '3%',
+        tintColor: 'black'
+    },
 })
     ;

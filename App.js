@@ -10,10 +10,11 @@ import loggedHome from './components/loggedin/loggedHome';
 import registerStore from './components/registerStore';
 
 {
-  // logged in pages
+  // loggedin pages
 }
 import userpage from './components/loggedin/userpage';
 import usersetting from './components/loggedin/usersetting';
+import useraddressEdit from './components/loggedin/useraddressEdit';
 
 {
   // goods status bar
@@ -49,10 +50,11 @@ const App = () => {
         <Stack.Screen name="registerStore" component={registerStore} options={{ headerShown: false }} />
 
         {
-          // logged in pages
+          // loggedin pages
         }
         <Stack.Screen name="userpage" component={userpage} options={{ headerShown: false }} />
         <Stack.Screen name="usersetting" component={usersetting} options={{ headerShown: false }} />
+        <Stack.Screen name="useraddressEdit" component={useraddressEdit} options={{ headerShown: false }} />
 
         {
           // goods status bar

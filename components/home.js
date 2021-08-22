@@ -38,8 +38,8 @@ export default function Home({ navigation }) {
         <View style={styles.headerbox}>
           <View style={styles.header}>
             <View style={styles.searchbar}>
-              <Icon name="ios-search" style={styles.icon} />
-              <TextInput placeholder="ค้นหา" />
+            <Image source={require('../images/search.png')} style={styles.icon} />
+              <TextInput style={{ marginLeft: '5%' }} placeholder="ค้นหา"/>
             </View>
             <TouchableOpacity onPress={() => Alert.alert("กรุณาเข้าสู่ระบบ")}>
               <View style={styles.box2}>
@@ -108,20 +108,20 @@ export default function Home({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E5E5E5',
-    marginTop: '10%'
+    backgroundColor: 'white',
   },
   header: {
     height: 50,
     padding: 10,
-    backgroundColor: '#00B900',
-    flexDirection: 'row'
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    marginTop: '10%'
   },
   searchbar: {
     height: '130%',
     width: '90%',
-    backgroundColor: 'white',
-    borderRadius: 15,
+    backgroundColor: '#E7E8E8',
+    borderRadius: 7,
     flexDirection: 'row',
     alignItems: 'center'
   },
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     marginLeft: '2.5%'
   },
   text1: {
-    color: 'white',
+    color: 'black',
     fontSize: 18,
     textAlign: 'left',
     flexDirection: 'row',
@@ -147,7 +147,10 @@ const styles = StyleSheet.create({
     marginLeft: '2%'
   },
   icon: {
-    fontSize: 25,
+    height: '65%',
+    width: '7%',
+    tintColor: 'black',
+    marginLeft: '3%'
   },
   textbox: {
     height: 50,
@@ -155,14 +158,15 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    backgroundColor: '#00B900',
+    backgroundColor: 'white',
     flexDirection: 'row'
   },
   noti: {
     width: 30,
     height: 30,
     marginTop: '8%',
-    marginLeft: '2%'
+    marginLeft: '2%',
+    tintColor: '#6359d5'
   },
   pomobox: {
     height: '50%',
@@ -190,7 +194,7 @@ const styles = StyleSheet.create({
   insidegoodsbox: {
     width: 180,
     height: 240,
-    backgroundColor: '#FFFF',
+    backgroundColor: '#7d75da',
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     borderRadius: 25,

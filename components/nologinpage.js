@@ -1,12 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, Button } from 'react-native'
+import { View, Text, StyleSheet, Image, Button, TouchableOpacity } from 'react-native';
+import { Header } from 'react-native-elements'
 
 const nologinpage = ({ navigation }) => {
     return (
         <View style={styles.container}>
-            <View style={styles.box}>
-                <Text style={styles.text}> ข้อมูลส่วนตัว </Text>
-            </View>
+            <Header
+                centerComponent={{ text: 'ข้อมูลส่วนตัว', style: { color: 'black', fontSize: 25 } }}
+                containerStyle={{
+                    backgroundColor: 'white',
+                    height: '18%',
+                    borderBottomLeftRadius: 20,
+                    borderBottomRightRadius: 20
+                }}
+            />
             <View style={styles.box2}>
                 <Image source={require('../images/userpage.png')} style={styles.image} />
                 <Text style={styles.text2}> Guest </Text>
@@ -30,15 +37,15 @@ const nologinpage = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: '10%',
-        backgroundColor: '#E5E5E5',
+        backgroundColor: 'white',
     },
     box: {
         height: 100,
         padding: 10,
-        backgroundColor: '#00B900',
+        backgroundColor: 'white',
         borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20
+        borderBottomRightRadius: 20,
+        marginTop: '10%'
     },
     box2: {
         flex: 1,
@@ -47,7 +54,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 30,
-        color: 'white',
+        color: 'black',
         textAlign: 'center',
         marginTop: '5%'
     },

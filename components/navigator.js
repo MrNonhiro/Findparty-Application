@@ -10,14 +10,13 @@ const Tab = createBottomTabNavigator();
 
 const Navigator = () => {
   return (   
-   
     <Tab.Navigator 
         tabBarOptions={{
-            activeTintColor: 'green',
+            showLabel: false,
             style:{
                 height: '8%',
-                borderTopLeftRadius: 30,
-                borderTopRightRadius: 30,
+                backgroundColor: 'white',
+                borderTopWidth: 0
             }
         }}
     >
@@ -31,9 +30,9 @@ const Navigator = () => {
                         source={require('../images/homepage.png')}
                         resizeMode="contain"
                         style={{
-                            width: 35,
-                            height:35,
-                            tintColor: focused ? 'green' : 'black',
+                            width: 30,
+                            height: 30,
+                            tintColor: focused ? '#6359d5' : '#D1D1D1',
                         }}
                     />
                 </View>
@@ -49,9 +48,9 @@ const Navigator = () => {
                     source={require('../images/community.png')}
                     resizeMode="contain"
                     style={{
-                        width: 45,
-                        height: 45,
-                        tintColor: focused ? 'green' : 'black',
+                        width: 30,
+                        height: 30,
+                        tintColor: focused ? '#6359d5' : '#D1D1D1',
                     }}
                 />
             ),
@@ -67,9 +66,9 @@ const Navigator = () => {
                         source={require('../images/user.png')}
                         resizeMode="contain"
                         style={{
-                            width: 40,
-                            height:40,
-                            tintColor: focused ? 'green' : 'black',
+                            width: 30,
+                            height: 30,
+                            tintColor: focused ? '#6359d5' : '#D1D1D1',
                         }}
                     />
                 </View>

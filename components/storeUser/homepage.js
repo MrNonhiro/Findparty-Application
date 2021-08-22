@@ -7,21 +7,22 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
-  Dimensions,
-  ImageStore
-} from 'react-native'
+} from 'react-native';
+import { Header } from 'react-native-elements'
 
 const list = [0, 1, 2, 3, 4, 5];
 const nologinpage = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <View style={styles.box}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../images/back.png')} style={{ height: 40, width: 40, marginTop: 19 }} />
-        </TouchableOpacity>
-        <Text style={styles.text}> Fashion men shop  </Text>
-      </View>
-
+      <Header
+        centerComponent={{ text: 'Fashion men shop', style: { color: 'black', fontSize: 25 } }}
+        containerStyle={{
+          backgroundColor: 'white',
+          height: '18%',
+          borderBottomLeftRadius: 20,
+          borderBottomRightRadius: 20
+        }}
+      />
       { // header 
       }
       <View style={{ flex: 2 }}>
@@ -73,8 +74,7 @@ const nologinpage = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: '10%',
-    backgroundColor: '#E5E5E5',
+    backgroundColor: 'white',
   },
   box: {
     height: 100,
