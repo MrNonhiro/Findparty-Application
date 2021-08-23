@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert, FlatList } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, FlatList } from 'react-native';
 import axios from 'axios';
+import { BlurView } from 'expo-blur';
 
 export default function partypage({ navigation, route }) {
   const [info, setInfo] = useState([]);
@@ -9,7 +10,7 @@ export default function partypage({ navigation, route }) {
     // Post updated, do something with route.params.post
     // For example, send the post to the server 
 
-    axios.get('http://34.87.120.146/showsingle.php',{
+    axios.get('http://34.126.164.13/showsingle.php', {
       params: {
         id: id
       }
@@ -30,56 +31,81 @@ export default function partypage({ navigation, route }) {
       keyExtractor={(item) => item}
       renderItem={({ item }) => (
         <View style={styles.container}>
-          <View style={styles.box}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Image source={require('../images/back.png')} style={{ height: 40, width: 40, marginTop: 19 }} />
-            </TouchableOpacity>
-            <Text style={styles.text}> {item.party_name} </Text>
-          </View>
-          <View style={styles.imagebox}>
+          <View style={styles.imagebox, { flexDirection: 'row' }}>
             <Image source={require('../images/shirt1.jpg')} style={styles.goodsimage} />
+              <BlurView intensity={45} tint="light" style={{
+                height: '10%',
+                width: '9%',
+                borderRadius: 20,
+                justifyContent: 'center',
+                position: 'absolute',
+                marginTop: '2%',
+                marginLeft: '2%'
+              }}>
+                <Image source={require('../images/back.png')} style={{
+                  height: 25,
+                  width: 25,
+                  tintColor: 'white',
+                  alignSelf: 'center',
+                  marginRight: '5%'
+                }} />
+              </BlurView>
           </View>
           <View style={styles.infobox}>
-            <Text style={{ color: 'black', fontSize: 20, marginTop: '3%' }}> {item.party_name} </Text>
+            <Text style={{ color: 'black', fontSize: 20, marginTop: '3%', fontWeight: 'bold' }}> {item.party_name} </Text>
             <View style={styles.detailbox}>
               <View style={{ flexDirection: 'row', marginTop: '2%' }}>
-                <Image source={require('../images/category.png')} style={{ height: 30, width: 25 }} />
-                <Text style={{ fontSize: 16 }}> ประเภท: </Text>
-                <Text style={{ fontSize: 16, marginLeft: '15%' }}> {item.party_type} </Text>
+                <Text style={{ fontSize: 16 }}> ประเภท </Text>
+                <Text style={{ fontSize: 16, marginLeft: '15%', marginLeft: '21%', fontWeight: 'bold' }}> {item.party_type} </Text>
               </View>
-              <View style={{ flexDirection: 'row', marginTop: '2%' }}>
-                <Image source={require('../images/date.png')} style={{ height: 25, width: 25 }} />
-                <Text style={{ fontSize: 16, color: 'black' }}> วันที่จัดตั้งกลุ่ม: </Text>
-                <Text style={{ fontSize: 16, color: 'black', marginLeft: '4%' }}> 30/06/64 </Text>
+              <View style={{ flexDirection: 'row', marginTop: '5%' }}>
+                <Text style={{ fontSize: 16, color: 'black' }}> วันที่จัดตั้งกลุ่ม </Text>
+                <Text style={{ fontSize: 16, color: 'black', marginLeft: '4%', marginLeft: '10.5%', fontWeight: 'bold' }}> 30/06/64 </Text>
               </View>
-              <View style={{ flexDirection: 'row' }}>
-                <Image source={require('../images/detail.png')} style={{ height: 30, width: 25, marginTop: 5 }} />
-                <Text style={{ marginTop: '2%', color: 'black', fontSize: 16 }}> รายละเอียดสินค้า: </Text>
-                <Text numberOfLines={5} style={{ width: 250, marginTop: '2%', fontSize: 16, color: 'black' }}>
-                {item.party_detail}
+              <View style={{ flexDirection: 'row', marginTop: '5%' }}>
+                <Text style={{ fontSize: 16, color: 'black' }}> ราคาหารต่อคน </Text>
+                <Text style={{ fontSize: 16, color: 'black', marginLeft: '10%', fontWeight: 'bold' }}> {item.party_price} </Text>
+                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}> บาท </Text>
+              </View>
+              <View style={{ flexDirection: 'row', marginTop: '5%' }}>
+                <Text style={{ fontSize: 16, color: 'black' }}> จำนวนสมาชิกกลุ่ม </Text>
+                <Text style={{ color: 'red', fontSize: 16, marginLeft: '5%', fontWeight: 'bold' }}> {item.party_member} </Text>
+                <Text style={{ fontSize: 16, color: 'black' }}> / </Text>
+                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}> {item.party_limitmember} </Text>
+                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}> คน </Text>
+              </View>
+              <View style={{ flexDirection: 'row', marginTop: '5%' }}>
+                <Text style={{ marginTop: '2%', color: 'black', fontSize: 16 }}> รายละเอียด </Text>
+                <Text numberOfLines={5} style={{ width: 250, marginTop: '2%', fontSize: 16, color: 'black', marginLeft: '17%', fontWeight: 'bold' }}>
+                  {item.party_detail}
                 </Text>
               </View>
-              <View style={{ flexDirection: 'row', marginTop: '2%' }}>
-                <Image source={require('../images/price.png')} style={{ height: 30, width: 30 }} />
-                <Text style={{ fontSize: 16, color: 'black' }}> ราคาหารต่อคน: </Text>
-                <Text style={{ fontSize: 16, color: 'black', marginLeft: '2.5%' }}> {item.party_price} </Text>
-                <Text style={{ fontSize: 16, color: 'black' }}> บาท </Text>
-              </View>
-              <View style={{ flexDirection: 'row', marginTop: '2%' }}>
-                <Image source={require('../images/joinpeople.png')} style={{ height: 30, width: 30 }} />
-                <Text style={{ fontSize: 16, color: 'black' }}> จำนวนสมาชิกกลุ่ม: </Text>
-                <Text style={{ color: 'red', fontSize: 16 }}> {item.party_member} </Text>
-                <Text style={{ fontSize: 16, color: 'black' }}> / </Text>
-                <Text style={{ fontSize: 16, color: 'black' }}> {item.party_limitmember} </Text>
-                <Text style={{ fontSize: 16, color: 'black' }}> คน </Text>
+              <View>
                 <TouchableOpacity>
-                  <View style={{ marginLeft: '20%', backgroundColor: 'green', alignItems: 'center', height: 35 }}>
-                    <Text onPress={() => Alert.alert("กรุณาเข้าสู่ระบบ")} style={{ fontSize: 14, color: 'white', marginTop: 7 }} > เข้าร่วมกลุ่ม </Text>
+                  <View style={{
+                    backgroundColor: '#6359d5',
+                    alignItems: 'center',
+                    height: 35,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    marginTop: '3%',
+                    width: '60%',
+                    alignSelf: 'center',
+                    borderRadius: 10
+                  }}>
+                    <Text onPress={() => Alert.alert("กรุณาเข้าสู่ระบบ")}
+                      style={{
+                        fontSize: 16,
+                        color: 'white',
+                        marginRight: '3%',
+                        fontWeight: 'bold'
+                      }} > เข้าร่วมกลุ่ม </Text>
+                    <Image source={require('../images/joinpeople.png')} style={{ height: 30, width: 30, tintColor: 'white' }} />
                   </View>
                 </TouchableOpacity>
               </View>
-              <View style={{ alignItems: 'center', marginTop: '0.5%' }}>
-                <Text style={{ fontSize: 16, color: 'green', fontWeight: 'bold', alignSelf: 'center' }}> ------------------------------------------------------------- </Text>
+              <View style={{ alignItems: 'center' }}>
+                <Text style={{ fontSize: 16, color: '#6359d5', fontWeight: 'bold', alignSelf: 'center' }}> ------------------------------------------------------------- </Text>
               </View>
               <View style={{ flexDirection: 'row' }}>
                 <Text style={{ fontSize: 16 }}> สร้างกลุ่มโดย </Text>
@@ -87,7 +113,12 @@ export default function partypage({ navigation, route }) {
               <TouchableOpacity>
                 <View style={{ flexDirection: 'row', marginTop: '2%' }}>
                   <Image source={require('../images/shirt1.jpg')} style={styles.storelogo} />
-                  <Text onPress={() => navigation.navigate('storepage')} style={{ fontSize: 18, textAlign: 'center', paddingTop: 13 }}> {item.party_store} </Text>
+                  <Text onPress={() => navigation.navigate('storepage')}
+                    style={{
+                      fontSize: 18,
+                      textAlign: 'center',
+                      paddingTop: 13
+                    }}> {item.party_store} </Text>
                 </View>
               </TouchableOpacity>
             </View>
@@ -95,7 +126,6 @@ export default function partypage({ navigation, route }) {
         </View>
       )}
     />
-
   )
 }
 
@@ -121,8 +151,11 @@ const styles = StyleSheet.create({
     marginTop: '5%',
   },
   imagebox: {
-    flex: 2,
     marginTop: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'center',
+    alignContent: 'center'
   },
   goodsimage: {
     height: 320,

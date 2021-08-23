@@ -19,7 +19,7 @@ export default function Home({ navigation }) {
     // Post updated, do something with route.params.post
     // For example, send the post to the server 
 
-    axios.get('http://34.87.120.146/showparty.php')
+    axios.get('http://34.126.164.13/showparty.php')
       .then(response => {
         setInfo(response.data);
       })
@@ -70,7 +70,7 @@ export default function Home({ navigation }) {
         <View style={styles.goodscontainer}>
           <Text style={styles.pomotext}> กำลังมาแรง </Text>
           <ScrollView>
-            <View style={styles.container}>
+            <View style={styles.container2}>
               <FlatList
                 style={{ marginTop: -40 }}
                 data={info}
@@ -109,6 +109,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  container2: {
+    flex: 1,
+    backgroundColor: 'white',
+    marginTop: '17%'
   },
   header: {
     height: 50,
@@ -176,7 +181,7 @@ const styles = StyleSheet.create({
   pomoimage: {
     width: '100%',
     height: '160%',
-    borderRadius: 10
+    borderRadius: 15
   },
   pomotext: {
     fontSize: 30,
@@ -194,14 +199,15 @@ const styles = StyleSheet.create({
   insidegoodsbox: {
     width: 180,
     height: 240,
-    backgroundColor: '#7d75da',
+    backgroundColor: '#f5f5f5',
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     borderRadius: 25,
     marginHorizontal: 3,
     marginLeft: 10,
     marginBottom: 15,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    elevation: 20
   },
   goodslogo: {
     width: 35,

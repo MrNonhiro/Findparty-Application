@@ -13,7 +13,7 @@ export default function loginpage({ navigation }) {
     const authenticate = async () => {
       axios
         .post(
-          "http://34.87.120.146/login.php",
+          "http://34.126.164.13/login.php",
           JSON.stringify({
             user_email: email,
             user_password: password,

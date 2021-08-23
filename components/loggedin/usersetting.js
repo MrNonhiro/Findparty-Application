@@ -5,14 +5,13 @@ import {
     StyleSheet,
     Image,
     TouchableOpacity,
-    Button,
     Animated,
     Dimensions,
     TextInput
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Header } from 'react-native-elements'
+import { Header, Button, ThemeProvider } from 'react-native-elements'
 
 export default function usersetting({ navigation }) {
     const [pickedImagePath, setPickedImagePath] = useState('');
@@ -56,6 +55,13 @@ export default function usersetting({ navigation }) {
         }
     }
 
+    const theme = {
+        Button: {
+            raised: false,
+
+        },
+    };
+
     return (
         <View style={styles.container}>
             <Header
@@ -66,7 +72,7 @@ export default function usersetting({ navigation }) {
                             <Image source={require('../../images/back.png')} style={{
                                 height: 25,
                                 width: 25,
-                                tintColor: 'black',
+                                tintColor: '#6359d5',
                             }} />
                         </TouchableOpacity>
                     </View>}
@@ -101,7 +107,7 @@ export default function usersetting({ navigation }) {
                                     width: 120,
                                     flexDirection: 'row',
                                     justifyContent: 'center',
-                                    borderRadius: 15
+                                    borderRadius: 10
                                 }}>
                                     <Image source={require('../../images/gallery.png')} style={{ height: 25, width: 25, marginTop: 8 }} />
                                     <Text style={{
@@ -121,7 +127,7 @@ export default function usersetting({ navigation }) {
                                     width: 100,
                                     flexDirection: 'row',
                                     justifyContent: 'center',
-                                    borderRadius: 15
+                                    borderRadius: 10
                                 }}>
                                     <Image source={require('../../images/camera.png')} style={{ height: 25, width: 25, marginTop: 8 }} />
                                     <Text style={{
@@ -146,53 +152,53 @@ export default function usersetting({ navigation }) {
 
                     }}> ข้อมูลส่วนตัว </Text>
                 </View>
-                    <View style={styles.detailView}>
-                        <Image source={require('../../images/user.png')} style={styles.userimage} />
-                        <Text style={styles.detailFont}> ชื่อ </Text>
-                        <TextInput style={{
+                <View style={styles.detailView}>
+                    <Image source={require('../../images/user.png')} style={styles.userimage} />
+                    <Text style={styles.detailFont}> ชื่อ </Text>
+                    <TextInput style={{
+                        fontSize: 15,
+                        color: '#808080',
+                        alignSelf: 'center',
+                        marginLeft: '26%'
+                    }}> ชื่อ display </TextInput>
+                </View>
+                <View style={styles.detailView}>
+                    <Image source={require('../../images/phone.png')} style={styles.userimage} />
+                    <Text style={styles.detailFont}> เบอร์โทรศัพท์ </Text>
+                    <TextInput style={{
+                        fontSize: 15,
+                        color: '#808080',
+                        alignSelf: 'center',
+                        marginLeft: '8%'
+                    }}> ชื่อ display </TextInput>
+                </View>
+                <View style={styles.detailView}>
+                    <Image source={require('../../images/emailuser.png')} style={styles.userimage} />
+                    <Text style={styles.detailFont}> อีเมลล์ </Text>
+                    <TextInput maxLength={23}
+                        style={{
                             fontSize: 15,
                             color: '#808080',
                             alignSelf: 'center',
-                            marginLeft: '26%'
-                        }}> ชื่อ display </TextInput>
-                    </View>
+                            marginLeft: '20%'
+                        }}> non.hiroki@hotmail.com </TextInput>
+                </View>
+                <TouchableOpacity onPress={() => navigation.navigate('useraddressEdit')}>
                     <View style={styles.detailView}>
-                        <Image source={require('../../images/phone.png')} style={styles.userimage} />
-                        <Text style={styles.detailFont}> เบอร์โทรศัพท์ </Text>
-                        <TextInput style={{
-                            fontSize: 15,
-                            color: '#808080',
-                            alignSelf: 'center',
-                            marginLeft: '8%'
-                        }}> ชื่อ display </TextInput>
-                    </View>
-                    <View style={styles.detailView}>
-                        <Image source={require('../../images/emailuser.png')} style={styles.userimage} />
-                        <Text style={styles.detailFont}> อีเมลล์ </Text>
-                        <TextInput maxLength={23}
+                        <Image source={require('../../images/address.png')} style={styles.userimage} />
+                        <Text style={styles.detailFont}> ที่อยู่ </Text>
+                        <Text
                             style={{
                                 fontSize: 15,
                                 color: '#808080',
                                 alignSelf: 'center',
-                                marginLeft: '21%'
-                            }}> non.hiroki@hotmail.com </TextInput>
+                                marginLeft: '9%'
+                            }}> 111/1 บรรพปราการ เวียง เมือง เชียงราย </Text>
                     </View>
-                    <TouchableOpacity onPress={() => navigation.navigate('useraddressEdit')}>
-                        <View style={styles.detailView}>
-                            <Image source={require('../../images/address.png')} style={styles.userimage} />
-                            <Text style={styles.detailFont}> ที่อยู่ </Text>
-                            <Text
-                                style={{
-                                    fontSize: 15,
-                                    color: '#808080',
-                                    alignSelf: 'center',
-                                    marginLeft: '9%'
-                                }}> 111/1 บรรพปราการ เวียง เมือง เชียงราย </Text>
-                        </View>
-                    </TouchableOpacity>
+                </TouchableOpacity>
 
-                    {/* when click this, it will insert data into user table */}
-                    <TouchableOpacity onPress={() => navigation.navigate('userpage')}>
+                {/* when click this, it will insert data into user table */}
+                {/* <TouchableOpacity onPress={() => navigation.navigate('userpage')}>
                         <View style={{
                             marginTop: '6%',
                             elevation: 10
@@ -203,7 +209,14 @@ export default function usersetting({ navigation }) {
                                 alignSelf: 'center'
                             }} />
                         </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity> */}
+                <View style={{
+                    marginTop: '3%'
+                }}>
+                    <ThemeProvider theme={theme}>
+                        <Button title="บันทึก" />
+                    </ThemeProvider>
+                </View>
             </View>
         </View>
 
@@ -256,9 +269,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         height: 50,
         width: '100%',
-        marginTop: '4%',
+        marginTop: '2%',
         alignItems: 'center',
-        borderRadius: 15,
+        borderRadius: 10,
         elevation: 5
     },
     detailFont: {
