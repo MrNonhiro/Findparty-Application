@@ -1,8 +1,47 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, Image, ImageBackground } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons'
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TextInput, Image, ImageBackground, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import axios from 'axios';
 
 const register = ({ navigation }) => {
+
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [submit, setSubmit] = useState("");
+
+  useEffect(() => {
+    const authenticate = async () => {
+      axios
+        .post(
+          "http://34.126.164.13/insert.php",
+          JSON.stringify({
+            username: username,
+            email: email,
+            password: password
+          })
+        )
+        .then((response) => {
+          if (response.data == "ok") {
+            setSubmit(false)
+            alert(JSON.stringify(response.data));
+          } else {
+            alert(JSON.stringify(response.data));
+            setSubmit(false)
+          }
+
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    if (submit) authenticate();
+  }, [submit]);
+
+  const usernameHandler = (text) => {
+    setUsername(text);
+  }
+
   return (
     <View style={styles.container}>
       <ImageBackground source={require('../images/loginregiswall.png')} style={styles.image}>
@@ -14,24 +53,26 @@ const register = ({ navigation }) => {
         <View style={styles.inputbox}>
           <View style={styles.searchbar}>
             <Image source={require('../images/userpage.png')} style={styles.userimage} />
-            <TextInput style={styles.placeholder} placeholder="Username" />
+            <TextInput onChangeText={usernameHandler} style={styles.placeholder} placeholder="Username" />
           </View>
           <View style={styles.searchbar}>
             <Image source={require('../images/email.png')} style={styles.userimage} />
-            <TextInput style={styles.placeholder} placeholder="E-mail" />
+            <TextInput onChangeText={(text) => setEmail(text)} style={styles.placeholder} placeholder="E-mail" />
           </View>
           <View style={styles.searchbar}>
             <Image source={require('../images/password.png')} style={styles.userimage} />
-            <TextInput style={styles.placeholder} placeholder="Password" keyboardType='numberic'/>
+            <TextInput onChangeText={(text) => setPassword(text)} style={styles.placeholder} placeholder="Password" keyboardType='numberic' />
           </View>
           <View style={styles.buttombox}>
             <Text onPress={() => navigation.navigate('registerStore')} style={{ alignSelf: 'center', marginBottom: '1%' }}> สมัครสมาชิกร้านค้า? </Text>
             <Text style={{ alignSelf: 'center', marginBottom: '1%' }}> หรือ </Text>
             <Text onPress={() => navigation.goBack()}> ดำเนินการต่อโดยผู้เยี่ยมชม </Text>
           </View>
-          <View style={styles.submit}>
-            <Text style={styles.submittext} onPress={() => navigation.navigate('loggedHome')}> สมัครสมาชิก </Text>
-          </View>
+          <TouchableOpacity onPress={() => setSubmit(true)}>
+            <View style={styles.submit}>
+              <Text style={styles.submittext}> สมัครสมาชิก </Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </ImageBackground>
     </View>
@@ -97,11 +138,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
     borderRadius: 25,
     borderWidth: 10,
-    borderColor: 'green'
+    borderColor: 'green',
+    elevation: 10
   },
   submittext: {
     fontSize: 25,
     color: 'white',
+    borderTopWidth: 0
   }
 })
 

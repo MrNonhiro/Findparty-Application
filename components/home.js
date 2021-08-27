@@ -79,7 +79,7 @@ export default function Home({ navigation }) {
                 renderItem={({ item }) => (
                   <TouchableOpacity onPress={() => navigation.navigate('partypage', { id: item.party_id })}>
                     <View style={styles.insidegoodsbox} elevation={5}>
-                      <Image source={require('../images/shirt1.jpg')} style={styles.goodsimage} />
+                      <Image source={{ uri: item.party_picture }} style={styles.goodsimage} />
                       <Text style={{ fontSize: 15 }}> {item.party_name} </Text>
                       <View style={{ flexDirection: 'row' }}>
                         <Text style={{ fontSize: 15, color: 'red' }}> {item.party_price} B </Text>
@@ -87,7 +87,7 @@ export default function Home({ navigation }) {
                       </View>
                       <View style={{ flexDirection: 'row' }}>
                         <Image source={require('../images/shirt1.jpg')} style={styles.goodslogo} />
-                        <Text style={{ fontSize: 13, textAlign: 'center', paddingTop: 8 }}> Fashion men shop </Text>
+                        <Text style={{ fontSize: 13, textAlign: 'center', paddingTop: 8 }}> {item.party_store} </Text>
                       </View>
                       <View style={{ flexDirection: 'row' }}>
                         <Image source={require('../images/user.png')} style={styles.goodslogo} />
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   container2: {
     flex: 1,
     backgroundColor: 'white',
-    marginTop: '17%'
+    marginTop: '14%'
   },
   header: {
     height: 50,
