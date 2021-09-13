@@ -1,9 +1,45 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Animated } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Animated, FlatList, SafeAreaView } from 'react-native';
 import { Header } from 'react-native-elements'
 import { Button } from 'react-native-elements/dist/buttons/Button';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function userpage({ navigation }) {
+
+    const [info, setInfo] = useState([]);
+    useEffect(() => {
+        // Post updated, do something with route.params.post
+        // For example, send the post to the server 
+
+        axios.get('http://34.126.169.148/showuser.php',{
+            params:{
+                user_id: user_id
+            }
+        })
+            .then(response => {
+                setInfo(response.data);
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    },[info])
+
+    useEffect(() => {
+        // Post updated, do something with route.params.post
+        // For example, send the post to the server 
+
+        AsyncStorage.getItem('user_id')
+            .then(response => {
+                setUser_id(response);
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    })
+
+    const [user_id,setUser_id] = useState([]);
+
     return (
         <View style={styles.container}>
             <Header
@@ -14,7 +50,7 @@ export default function userpage({ navigation }) {
                             <Image source={require('../../images/back.png')} style={{
                                 height: 25,
                                 width: 25,
-                                tintColor: 'black',
+                                tintColor: '#6359d5',
                             }} />
                         </TouchableOpacity>
                     </View>}
@@ -26,91 +62,98 @@ export default function userpage({ navigation }) {
                     borderBottomRightRadius: 20
                 }}
             />
+            <View style={{ flex: 1 }}>
+                <FlatList
+                    style={{ marginTop: -40 }}
+                    data={info}
+                    renderItem={({ item }) => (
+                        <View>
+                            <TouchableOpacity onPress={() => navigation.navigate('usersetting', { id: item.user_id })}>
+                                <View>
+                                    <Image source={require('../../images/setting.png')} style={{
+                                        height: 35,
+                                        width: 35,
+                                        marginRight: '5%',
+                                        alignSelf: 'flex-end',
+                                        tintColor: '#6359d5',
+                                        marginTop: '2%'
+                                    }} />
+                                </View>
+                            </TouchableOpacity>
 
-            { // Profile picture and name
-            }
-            <View>
-                <TouchableOpacity onPress={() => navigation.navigate('usersetting')}>
-                    <Image source={require('../../images/setting.png')} style={{
-                        height: 35,
-                        width: 35,
-                        marginRight: '5%',
-                        alignSelf: 'flex-end',
-                        tintColor: '#6359d5',
-                        marginTop: '2%'
-                    }} />
-                </TouchableOpacity>
+                            <View style={styles.box2}>
+                                <Image source={require('../../images/shirt1.jpg')} style={styles.image} />
+                                <Text style={styles.text2}>{item.user_display} </Text>
+                            </View>
+
+                            <View style={{
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                marginTop: '10%'
+                            }}>
+                                <TouchableOpacity>
+                                    <View style={{ marginRight: '2.5%' }}>
+                                        <Text style={{ alignSelf: 'center', color: 'black', fontSize: 50 }}> 0 </Text>
+                                        <Text style={{ alignSelf: 'center', color: 'black', fontSize: 15 }}> กำลังติดตาม </Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity>
+                                    <View style={{ marginRight: '2.5%' }}>
+                                        <Text style={{ alignSelf: 'center', color: 'black', fontSize: 50 }}> 0 </Text>
+                                        <Text style={{ alignSelf: 'center', color: 'black', fontSize: 15 }}> เข้าร่วมทั้งหมด </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+
+                            <Text style={{
+                                fontSize: 20,
+                                color: 'black',
+                                marginLeft: '3%',
+                                marginTop: '8%'
+                            }}> รายการซื้อของฉัน </Text>
+                            <View style={styles.statusbox}>
+                                <TouchableOpacity onPress={() => navigation.navigate('paymentWating')}>
+                                    <View style={{ marginTop: '10%', marginRight: '2.5%' }}>
+                                        <Image source={require('../../images/waitingpayment.png')} style={styles.statusimage1} />
+                                        <View style={styles.badge}>
+                                            <Text style={styles.badgeText}> 0 </Text>
+                                        </View>
+                                        <Text style={{ alignSelf: 'center', color: 'black' }}> รอการชำระเงิน </Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => navigation.navigate('deliveryWaiting')}>
+                                    <View style={{ marginTop: '12%', marginRight: '2.5%' }}>
+                                        <Image source={require('../../images/deliverywating.png')} style={styles.statusimage2} />
+                                        <View style={styles.badge}>
+                                            <Text style={styles.badgeText}> 0 </Text>
+                                        </View>
+                                        <Text style={{ alignSelf: 'center', color: 'black' }}> รอการจัดส่ง </Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => navigation.navigate('delivery')}>
+                                    <View style={{ marginTop: '13%', marginRight: '2.5%' }}>
+                                        <Image source={require('../../images/delivery.png')} style={styles.statusimage3} />
+                                        <View style={styles.badge}>
+                                            <Text style={styles.badgeText}> 0 </Text>
+                                        </View>
+                                        <Text style={{ alignSelf: 'center', color: 'black' }}> รอรับสินค้า </Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => navigation.navigate('received')}>
+                                    <View style={{ marginTop: '10%', marginRight: '2.5%' }}>
+                                        <Image source={require('../../images/received.png')} style={styles.statusimage4} />
+                                        <View style={styles.badge}>
+                                            <Text style={styles.badgeText}> 0 </Text>
+                                        </View>
+                                        <Text style={{ alignSelf: 'center', color: 'black' }}> รายการที่สำเร็จ </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    )}
+                />
             </View>
 
-            <View style={styles.box2}>
-                <Image source={require('../../images/shirt1.jpg')} style={styles.image} />
-                <Text style={styles.text2}> Waranon Techa </Text>
-            </View>
-
-            <View style={{
-                flexDirection: 'row',
-                justifyContent: 'center'
-            }}>
-                <TouchableOpacity>
-                    <View style={{ marginRight: '2.5%' }}>
-                        <Text style={{ alignSelf: 'center', color: 'black', fontSize: 50 }}> 0 </Text>
-                        <Text style={{ alignSelf: 'center', color: 'black', fontSize: 15 }}> กำลังติดตาม </Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <View style={{ marginRight: '2.5%' }}>
-                        <Text style={{ alignSelf: 'center', color: 'black', fontSize: 50 }}> 0 </Text>
-                        <Text style={{ alignSelf: 'center', color: 'black', fontSize: 15 }}> เข้าร่วมทั้งหมด </Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
-
-            { // Goods status bar
-            }
-            <Text style={{
-                fontSize: 20,
-                color: 'black',
-                marginLeft: '3%',
-                marginTop: '8%'
-            }}> รายการซื้อของฉัน </Text>
-            <View style={styles.statusbox}>
-                <TouchableOpacity onPress={() => navigation.navigate('paymentWating')}>
-                    <View style={{ marginTop: '10%', marginRight: '2.5%' }}>
-                        <Image source={require('../../images/waitingpayment.png')} style={styles.statusimage1} />
-                        <View style={styles.badge}>
-                            <Text style={styles.badgeText}> 0 </Text>
-                        </View>
-                        <Text style={{ alignSelf: 'center', color: 'black' }}> รอการชำระเงิน </Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('deliveryWaiting')}>
-                    <View style={{ marginTop: '12%', marginRight: '2.5%' }}>
-                        <Image source={require('../../images/deliverywating.png')} style={styles.statusimage2} />
-                        <View style={styles.badge}>
-                            <Text style={styles.badgeText}> 0 </Text>
-                        </View>
-                        <Text style={{ alignSelf: 'center', color: 'black' }}> รอการจัดส่ง </Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('delivery')}>
-                    <View style={{ marginTop: '13%', marginRight: '2.5%' }}>
-                        <Image source={require('../../images/delivery.png')} style={styles.statusimage3} />
-                        <View style={styles.badge}>
-                            <Text style={styles.badgeText}> 0 </Text>
-                        </View>
-                        <Text style={{ alignSelf: 'center', color: 'black' }}> รอรับสินค้า </Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('received')}>
-                    <View style={{ marginTop: '10%', marginRight: '2.5%' }}>
-                        <Image source={require('../../images/received.png')} style={styles.statusimage4} />
-                        <View style={styles.badge}>
-                            <Text style={styles.badgeText}> 0 </Text>
-                        </View>
-                        <Text style={{ alignSelf: 'center', color: 'black' }}> รายการที่สำเร็จ </Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
             <Button title='Add' onPress={() => this.animateBadge()}> </Button>
         </View>
     )
@@ -149,30 +192,30 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '50%',
-        height: '80%',
+        height: '100%',
         borderRadius: 120,
     },
     statusimage1: {
         width: '45%',
-        height: '65%',
+        height: 48,
         alignSelf: 'center',
         tintColor: 'black'
     },
     statusimage2: {
         width: '70%',
-        height: '65%',
+        height: 48,
         alignSelf: 'center',
         tintColor: 'black'
     },
     statusimage3: {
         width: '85%',
-        height: '65%',
+        height: 48,
         alignSelf: 'center',
         tintColor: 'black'
     },
     statusimage4: {
         width: '45%',
-        height: '65%',
+        height: 48,
         alignSelf: 'center',
         tintColor: 'black'
     },
@@ -181,12 +224,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignSelf: 'center',
         marginBottom: '20%',
-        height: '12%',
+        height: 150,
         borderRadius: 20,
         backgroundColor: 'white',
         borderTopWidth: 1,
         borderBottomWidth: 1,
-        marginTop: '3%'
+        marginTop: '3%',
+        borderColor: '#6359d5',
     },
     badge: {
         position: 'absolute',

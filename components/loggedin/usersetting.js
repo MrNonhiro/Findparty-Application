@@ -7,11 +7,14 @@ import {
     TouchableOpacity,
     Animated,
     Dimensions,
-    TextInput
+    TextInput,
+    FlatList
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Header, Button, ThemeProvider } from 'react-native-elements'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 export default function usersetting({ navigation }) {
     const [pickedImagePath, setPickedImagePath] = useState('');
@@ -55,12 +58,48 @@ export default function usersetting({ navigation }) {
         }
     }
 
-    const theme = {
-        Button: {
-            raised: false,
+    {/* let [fontsLoaded] = useFonts({
+        'Inter-SemiBoldItalic': 'https://rsms.me/inter/font-files/Inter-SemiBoldItalic.otf?v=3.12',
+        'bahnschrift': require('./assets/fonts/bahnschrift.ttf'),
+        'FC_Iconic': require('./assets/fonts/FC_IconicBold.ttf'),
+    });
+    if (!fontsLoaded) {
+        return <AppLoading />;
+    }
+    */}
 
-        },
-    };
+    const [info, setInfo] = useState([]);
+    useEffect(() => {
+        // Post updated, do something with route.params.post
+        // For example, send the post to the server 
+
+        axios.get('http://34.126.169.148/showuser.php', {
+            params: {
+                user_id: user_id
+            }
+        })
+            .then(response => {
+                setInfo(response.data);
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }, [info])
+
+    useEffect(() => {
+        // Post updated, do something with route.params.post
+        // For example, send the post to the server 
+
+        AsyncStorage.getItem('user_id')
+            .then(response => {
+                setUser_id(response);
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    })
+
+    const [user_id, setUser_id] = useState([]);
 
     return (
         <View style={styles.container}>
@@ -83,6 +122,16 @@ export default function usersetting({ navigation }) {
                     borderBottomLeftRadius: 20,
                     borderBottomRightRadius: 20
                 }}
+                rightComponent={
+                    <View style={{ marginTop: '4%' }}>
+                        <TouchableOpacity onPress={() => { navigation.navigate('userpage') }}>
+                            <Text style={{
+                                color: '#6359d5',
+                                fontSize: 20
+                            }}> บันทึก </Text>
+                        </TouchableOpacity>
+                    </View>
+                }
             />
             <View style={{
                 flex: 1,
@@ -107,7 +156,7 @@ export default function usersetting({ navigation }) {
                                     width: 120,
                                     flexDirection: 'row',
                                     justifyContent: 'center',
-                                    borderRadius: 10
+                                    borderRadius: 15
                                 }}>
                                     <Image source={require('../../images/gallery.png')} style={{ height: 25, width: 25, marginTop: 8 }} />
                                     <Text style={{
@@ -127,7 +176,7 @@ export default function usersetting({ navigation }) {
                                     width: 100,
                                     flexDirection: 'row',
                                     justifyContent: 'center',
-                                    borderRadius: 10
+                                    borderRadius: 15
                                 }}>
                                     <Image source={require('../../images/camera.png')} style={{ height: 25, width: 25, marginTop: 8 }} />
                                     <Text style={{
@@ -140,62 +189,81 @@ export default function usersetting({ navigation }) {
                         </View>
                     </View>
                 </View>
-                <View style={{
-                    height: 20,
-                    marginTop: '20%',
-                    marginBottom: 10,
-                    alignSelf: 'flex-start'
-                }}>
-                    <Text style={{
-                        fontSize: 20,
-                        color: 'black',
+                <View style={{ flex: 1, width: '100%', marginTop: '6%' }}>
+                    <FlatList
+                        style={{ marginTop: -40 }}
+                        data={info}
+                        renderItem={({ item }) => (
+                            <View>
+                                <View style={{
+                                    height: 20,
+                                    marginTop: '20%',
+                                    marginBottom: 10,
+                                    alignSelf: 'flex-start'
+                                }}>
+                                    <Text style={{
+                                        fontSize: 20,
+                                        color: 'black',
 
-                    }}> ข้อมูลส่วนตัว </Text>
+                                    }}> ข้อมูลส่วนตัว {item.user_display} </Text>
+                                </View>
+                                <View style={styles.detailView}>
+                                    <Image source={require('../../images/user.png')} style={styles.userimage} />
+                                    <TextInput
+                                        style={styles.input}
+                                        value={item.user_display}
+                                    />
+                                </View>
+                                <View style={styles.detailView}>
+                                    <Image source={require('../../images/phone.png')} style={styles.userimage} />
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder={item.user_tel}
+                                        keyboardType="numeric"
+                                    />
+                                </View>
+                                <View style={styles.detailView}>
+                                    <Image source={require('../../images/emailuser.png')} style={styles.userimage} />
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder={item.user_email}
+                                    />
+                                </View>
+                                <TouchableOpacity style={styles.detailView} onPress={() => navigation.navigate('useraddressEdit')}>
+                                    <View style={styles.detailView}>
+                                        <Image source={require('../../images/address.png')} style={styles.userimage} />
+                                        <TextInput
+                                            style={styles.input}
+                                            placeholder="ที่อยู่"
+                                        />
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => navigation.navigate('nologinpage',AsyncStorage.removeItem('user_id'))}>
+                                    <View style={{
+                                        backgroundColor: 'red',
+                                        alignItems: 'center',
+                                        height: 35,
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        marginTop: '5%',
+                                        width: '90%',
+                                        alignSelf: 'center',
+                                        borderRadius: 10
+                                    }}>
+                                        <Text style={{
+                                            fontSize: 16,
+                                            color: 'white',
+                                            marginRight: '3%',
+                                            fontWeight: 'bold'
+                                        }}> ออกจากระบบ </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+
+                        )}
+                    />
+
                 </View>
-                <View style={styles.detailView}>
-                    <Image source={require('../../images/user.png')} style={styles.userimage} />
-                    <Text style={styles.detailFont}> ชื่อ </Text>
-                    <TextInput style={{
-                        fontSize: 15,
-                        color: '#808080',
-                        alignSelf: 'center',
-                        marginLeft: '26%'
-                    }}> ชื่อ display </TextInput>
-                </View>
-                <View style={styles.detailView}>
-                    <Image source={require('../../images/phone.png')} style={styles.userimage} />
-                    <Text style={styles.detailFont}> เบอร์โทรศัพท์ </Text>
-                    <TextInput style={{
-                        fontSize: 15,
-                        color: '#808080',
-                        alignSelf: 'center',
-                        marginLeft: '8%'
-                    }}> ชื่อ display </TextInput>
-                </View>
-                <View style={styles.detailView}>
-                    <Image source={require('../../images/emailuser.png')} style={styles.userimage} />
-                    <Text style={styles.detailFont}> อีเมลล์ </Text>
-                    <TextInput maxLength={23}
-                        style={{
-                            fontSize: 15,
-                            color: '#808080',
-                            alignSelf: 'center',
-                            marginLeft: '20%'
-                        }}> non.hiroki@hotmail.com </TextInput>
-                </View>
-                <TouchableOpacity onPress={() => navigation.navigate('useraddressEdit')}>
-                    <View style={styles.detailView}>
-                        <Image source={require('../../images/address.png')} style={styles.userimage} />
-                        <Text style={styles.detailFont}> ที่อยู่ </Text>
-                        <Text
-                            style={{
-                                fontSize: 15,
-                                color: '#808080',
-                                alignSelf: 'center',
-                                marginLeft: '9%'
-                            }}> 111/1 บรรพปราการ เวียง เมือง เชียงราย </Text>
-                    </View>
-                </TouchableOpacity>
 
                 {/* when click this, it will insert data into user table */}
                 {/* <TouchableOpacity onPress={() => navigation.navigate('userpage')}>
@@ -210,15 +278,8 @@ export default function usersetting({ navigation }) {
                             }} />
                         </View>
                         </TouchableOpacity> */}
-                <View style={{
-                    marginTop: '3%'
-                }}>
-                    <ThemeProvider theme={theme}>
-                        <Button title="บันทึก" />
-                    </ThemeProvider>
-                </View>
             </View>
-        </View>
+        </View >
 
     )
 }
@@ -269,10 +330,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         height: 50,
         width: '100%',
-        marginTop: '2%',
+        marginTop: '1%',
         alignItems: 'center',
-        borderRadius: 10,
-        elevation: 5
+        elevation: 3
     },
     detailFont: {
         fontSize: 15,
@@ -281,10 +341,13 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
     userimage: {
-        height: '55%',
-        width: '8%',
+        height: '43%',
+        width: '5.5%',
         marginLeft: '3%',
-        tintColor: 'black'
+        tintColor: '#6359d5'
     },
+    input: {
+        marginLeft: '5%'
+    }
 })
     ;

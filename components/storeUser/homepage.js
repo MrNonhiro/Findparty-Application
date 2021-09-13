@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,67 +7,98 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
+  SafeAreaView
 } from 'react-native';
-import { Header } from 'react-native-elements'
+import { Header } from 'react-native-elements';
+import axios from 'axios';
 
-const list = [0, 1, 2, 3, 4, 5];
-const nologinpage = ({ navigation }) => {
+export default function homepage({ navigation }) {
+  const [info, setInfo] = useState([]);
+  useEffect(() => {
+    // Post updated, do something with route.params.post
+    // For example, send the post to the server 
+
+    axios.get('http://34.126.169.148/showparty.php')
+      .then(response => {
+        setInfo(response.data);
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  })
+
   return (
-    <View style={styles.container}>
-      <Header
-        centerComponent={{ text: 'Fashion men shop', style: { color: 'black', fontSize: 25 } }}
-        containerStyle={{
-          backgroundColor: 'white',
-          height: '18%',
-          borderBottomLeftRadius: 20,
-          borderBottomRightRadius: 20
-        }}
-      />
-      { // header 
-      }
-      <View style={{ flex: 2 }}>
-        <View style={styles.box2}>
-          <Image source={require('../../images/shirt1.jpg')} style={styles.image} />
-          <Text style={styles.text2}> Fashion men shop </Text>
-        </View>
-      </View>
+    <ScrollView style={{
+      flex: 1
+    }}>
+      <View style={styles.container}>
+        <Header
+          centerComponent={{ text: 'Fashion men shop', style: { color: 'black', fontSize: 25 } }}
+          containerStyle={{
+            backgroundColor: 'white',
+            height: '18%',
+            borderBottomLeftRadius: 20,
+            borderBottomRightRadius: 20
+          }}
+          rightComponent={
+            <View style={{ marginTop: '8%' }}>
+              <TouchableOpacity
+                onPress={() => { navigation.navigate('usersetting') }}>
+                <Image source={require('../../images/noti.png')} style={{
+                  height: 25,
+                  width: 25,
+                  tintColor: '#6359d5',
+                }} />
+              </TouchableOpacity>
+            </View>}
+        />
 
-      { // party group
-      }
-      <View style={{ flex: 3, marginTop: '10%' }}>
-        <Text style={styles.pomotext}> รายการสินค้า </Text>
-        <ScrollView>
-          <View style={styles.container}>
+        <View style={{ flex: 2 }}>
+          <View style={styles.box2}>
+            <Image source={require('../../images/shirt1.jpg')} style={styles.image} />
+            <Text style={styles.text2}> Fashion men shop </Text>
+          </View>
+        </View>
+
+        <View style={{ flex: 3, marginTop: '10%' }}>
+          <Text style={styles.pomotext}> รายการสินค้า </Text>
+          <SafeAreaView style={styles.container}>
             <FlatList
               style={{ marginTop: -40 }}
-              data={list}
+              data={info}
               numColumns={2}
-              keyExtractor={(item) => item}
+              keyExtractor={(items) => items.id}
               renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => navigation.navigate('partypage')}>
+                <TouchableOpacity onPress={() => navigation.navigate('partydetail', { id: item.party_id })}>
                   <View style={styles.insidegoodsbox} elevation={5}>
-                    <Image source={require('../../images/shirt1.jpg')} style={styles.goodsimage} />
-                    <Text style={{ fontSize: 15 }}> เสื้อแฟชัน sleeveless </Text>
+                    <Image source={{ uri: item.party_picture }} style={styles.goodsimage} />
+                    <Text numberOfLines={1} style={{ fontSize: 15, width: 200 }}> {item.party_name} </Text>
                     <View style={{ flexDirection: 'row' }}>
-                      <Text style={{ fontSize: 15, color: 'red' }}> 150 B </Text>
+                      <Text style={{ fontSize: 15, color: 'red' }}> {item.party_price} B </Text>
                       <Text style={{ fontSize: 15, color: 'black' }}> / คน </Text>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                       <Image source={require('../../images/shirt1.jpg')} style={styles.goodslogo} />
-                      <Text style={{ fontSize: 13, textAlign: 'center', paddingTop: 8 }}> Fashion men shop </Text>
+                      <Text numberOfLines={1} style={{ fontSize: 13, textAlign: 'center', paddingTop: 8 }}> {item.party_store} </Text>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
-                      <Image source={require('../../images/user.png')} style={styles.goodslogo} />
-                      <Text style={{ fontSize: 13, textAlign: 'center', paddingTop: 8 }}> หารกัน 3 ชิ้น </Text>
+                      <Image source={require('../../images/user.png')} style={{
+                        width: 30,
+                        height: 30,
+                        borderRadius: 100 / 3,
+                        tintColor: '#6359d5',
+                        marginTop: '1%'
+                      }} />
+                      <Text style={{ fontSize: 13, textAlign: 'center', paddingTop: 8, marginLeft: '3%' }}> หารกัน {item.party_limitmember} ชิ้น </Text>
                     </View>
                   </View>
                 </TouchableOpacity>
               )}
             />
-          </View>
-        </ScrollView>
+          </SafeAreaView>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
@@ -87,7 +118,6 @@ const styles = StyleSheet.create({
   box2: {
     flex: 1,
     alignItems: 'center',
-    marginTop: '10%',
   },
   text: {
     fontSize: 30,
@@ -104,7 +134,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '45%',
-    height: '100%',
+    height: 180,
     borderRadius: 120,
   },
   pomotext: {
@@ -137,6 +167,4 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 100 / 3
   },
-})
-
-export default nologinpage;
+});

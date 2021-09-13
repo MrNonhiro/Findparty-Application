@@ -32,7 +32,7 @@ const Navigator = () => {
                         style={{
                             width: 30,
                             height: 30,
-                            tintColor: focused ? 'black' : '#D1D1D1',
+                            tintColor: focused ? '#6359d5' : '#D1D1D1',
                         }}
                     />
                 </View>
@@ -50,7 +50,7 @@ const Navigator = () => {
                     style={{
                         width: 30,
                         height: 30,
-                        tintColor: focused ? 'black' : '#D1D1D1',
+                        tintColor: focused ? '#6359d5' : '#D1D1D1',
                     }}
                 />
             ),
@@ -68,7 +68,7 @@ const Navigator = () => {
                         style={{
                             width: 30,
                             height: 30,
-                            tintColor: focused ? 'black' : '#D1D1D1',
+                            tintColor: focused ? '#6359d5' : '#D1D1D1',
                         }}
                     />
                 </View>

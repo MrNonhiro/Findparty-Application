@@ -49,7 +49,7 @@ const nologinpage = ({ navigation }) => {
       <View style={{ flex: 3, marginTop: '10%' }}>
         <Text style={styles.pomotext}> รายการสินค้า </Text>
         <ScrollView>
-          <View style={styles.container}>
+          <SafeAreaView style={styles.container}>
             <FlatList
               style={{ marginTop: -40 }}
               data={list}
@@ -76,7 +76,7 @@ const nologinpage = ({ navigation }) => {
                 </TouchableOpacity>
               )}
             />
-          </View>
+          </SafeAreaView>
         </ScrollView>
       </View>
     </View>

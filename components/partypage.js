@@ -12,6 +12,8 @@ import {
 import axios from 'axios';
 import { BlurView } from 'expo-blur';
 import Slidepictures from './partyPage/slidepictures';
+import { Header } from 'react-native-elements'
+import { Button } from 'react-native-elements/dist/buttons/Button';
 
 export default function partypage({ navigation, route }) {
   const [info, setInfo] = useState([]);
@@ -20,7 +22,7 @@ export default function partypage({ navigation, route }) {
     // Post updated, do something with route.params.post
     // For example, send the post to the server 
 
-    axios.get('http://34.126.164.13/showsingle.php', {
+    axios.get('http://34.126.169.148/showsingle.php', {
       params: {
         id: id
       }
@@ -72,17 +74,49 @@ export default function partypage({ navigation, route }) {
       style={{ marginTop: -40 }}
       data={info}
       numColumns={1}
-      keyExtractor={(item) => item}
+      keyExtractor={(items) => items}
       renderItem={({ item }) => (
         <View style={styles.container}>
+          <Header
+            leftComponent={
+              <View style={{ marginTop: '8%' }}>
+                <TouchableOpacity
+                  onPress={() => { navigation.goBack() }}>
+                  <Image source={require('../images/back.png')} style={{
+                    height: 25,
+                    width: 25,
+                    tintColor: '#6359d5',
+                  }} />
+                </TouchableOpacity>
+              </View>}
+            centerComponent={{ text: 'ข้อมูลส่วนตัว', style: { color: 'black', fontSize: 25 } }}
+            containerStyle={{
+              backgroundColor: 'white',
+              height: '18%',
+              borderBottomLeftRadius: 20,
+              borderBottomRightRadius: 20
+            }}
+            rightComponent={
+              <View style={{ marginTop: '8%' }}>
+                <TouchableOpacity
+                  onPress={() => { navigation.navigate('usersetting') }}>
+                  <Image source={require('../images/setting.png')} style={{
+                    height: 25,
+                    width: 25,
+                    tintColor: '#6359d5',
+                  }} />
+                </TouchableOpacity>
+              </View>}
+          />
           <View style={styles.imagebox, { flexDirection: 'row' }}>
-
+                {/*
             <View style={{
               justifyContent: 'center',
               width: '100%',
               backgroundColor: 'red',
               flexDirection: 'row'
             }}>
+              
               <FlatList
                 style={{
                   width: '100%',
@@ -97,11 +131,11 @@ export default function partypage({ navigation, route }) {
                       alignItems: 'center',
                       alignContent: 'center'
                     }}>
-                     
+
                     </View>
                   )
                 }
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor={(index) => index.toString()}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 pagingEnabled
@@ -116,8 +150,9 @@ export default function partypage({ navigation, route }) {
                 ref={dataRef}
               />
             </View>
-
-            {/*<BlurView intensity={45} tint="light" style={{
+                */}
+            {/*
+            <BlurView intensity={45} tint="light" style={{
               height: '10%',
               width: '9%',
               borderRadius: 20,
@@ -209,7 +244,7 @@ export default function partypage({ navigation, route }) {
                     style={{
                       fontSize: 18,
                       textAlign: 'center',
-                      paddingTop: 13
+                      paddingTop: '2%'
                     }}> {item.party_store} </Text>
                 </View>
               </TouchableOpacity>
@@ -261,9 +296,8 @@ const styles = StyleSheet.create({
     marginTop: 5
   },
   storelogo: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     borderRadius: 100 / 3
   },
-})
-  ;
+});

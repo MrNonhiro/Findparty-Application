@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, 
-  Text, 
-  StyleSheet, 
-  TextInput, 
-  Image, 
-  ImageBackground, 
-  TouchableOpacity
-  } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Image, ImageBackground, TouchableOpacity } from 'react-native';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function loginpage({ navigation }) {
-  const [username, setuser_Username] = useState("");
+  const [email, setuser_Email] = useState("");
   const [password, setuser_Password] = useState("");
   const [googleSubmitting, setGoogleSubmitting] = useState("");
 
@@ -23,15 +15,13 @@ export default function loginpage({ navigation }) {
         .post(
           "http://34.126.169.148/login.php",
           JSON.stringify({
-            password: password,
-            username: username
+            user_email: email,
+            user_password: password,
           })
         )
         .then((response) => {
-          if (response.data.onLogin == "true") {
+          if (response.data == "true") {
             navigation.navigate("userpage");
-            AsyncStorage.setItem('user_id',response.data.user_id)
-            alert(response.data.user_id)
             setIsSubmit(false)
           } else {
             alert(JSON.stringify(response.data));
@@ -48,7 +38,8 @@ export default function loginpage({ navigation }) {
   }, [isSubmit]);
 
   const usernameHandler = (text) => {
-    setuser_Username(text);
+    setuser_Email(text);
+
   };
 
   return (
@@ -70,11 +61,6 @@ export default function loginpage({ navigation }) {
           </View>
           <View style={styles.buttombox}>
             <Text style={{ alignSelf: 'center', alignSelf: 'flex-end', marginRight: '10%', marginTop: '2%' }}> ลืมรหัสผ่าน? </Text>
-            <Text style={{ alignSelf: 'center', marginTop: '5%' }}> เข้าสู่ระบบโดย </Text>
-          </View>
-          <View style={styles.loginvia}>
-            <Image source={require('../images/facebook.png')} style={styles.loginimage} />
-            <Image source={require('../images/google.png')} style={styles.loginimage2} />
           </View>
           <View style={styles.submit}>
             <TouchableOpacity onPress={() => setIsSubmit(true)} style={styles.submittext}><Text> เข้าสู่ระบบ </Text></TouchableOpacity>
@@ -101,6 +87,7 @@ const styles = StyleSheet.create({
   headbox: {
     flexDirection: 'row',
     alignSelf: 'center',
+
   },
   text: {
     fontSize: 20,
@@ -110,7 +97,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'black',
     fontWeight: 'bold',
-    color: '#6359d5'
+    color: 'green'
   },
   inputbox: {
     padding: 10

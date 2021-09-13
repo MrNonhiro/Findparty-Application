@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import { View, Text, StyleSheet, Image, Button, TouchableOpacity } from 'react-native';
 import { Header } from 'react-native-elements'
@@ -19,7 +20,7 @@ const nologinpage = ({ navigation }) => {
                 <Text style={styles.text2}> Guest </Text>
                 <Button color="green" style={{ fontSize: 20, borderRadius: 10 }}
                     title="คลิกเพื่อสมัครสมาชิก"
-                    onPress={() => navigation.navigate('register')}>
+                    onPress={() => navigation.navigate('register',AsyncStorage.removeItem('user_id'))}>
                 </Button>
                 <Button color="blue" style={{ fontSize: 20, borderRadius: 10 }}
                     title="e.g. user's detail page"

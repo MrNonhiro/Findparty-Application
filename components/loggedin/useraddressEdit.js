@@ -38,7 +38,7 @@ export default function useraddressEdit({ navigation }) {
                             <Image source={require('../../images/back.png')} style={{
                                 height: 25,
                                 width: 25,
-                                tintColor: 'black',
+                                tintColor: '#6359d5',
                             }} />
                         </TouchableOpacity>
                     </View>}
@@ -64,12 +64,14 @@ export default function useraddressEdit({ navigation }) {
                 }}> ช่องทางการติดต่อ </Text>
             </View>
             <View style={styles.detailView}>
+                <Image source={require('../../images/user.png')} style={styles.userimage} />
                 <TextInput
                     style={styles.input}
                     placeholder="ชื่อ นามสกุล"
                 />
             </View>
             <View style={styles.detailView}>
+                <Image source={require('../../images/phone.png')} style={styles.userimage} />
                 <TextInput
                     style={styles.input}
                     placeholder="เบอร์โทรศัพท์"
@@ -94,6 +96,7 @@ export default function useraddressEdit({ navigation }) {
                 <Text style={styles.paragraph}>{text}</Text>
             </View>
             <View style={styles.detailView}>
+                <Image source={require('../../images/address.png')} style={styles.userimage} />
                 <TextInput
                     style={styles.input}
                     placeholder="รายละเอียดที่อยู่"
@@ -101,7 +104,7 @@ export default function useraddressEdit({ navigation }) {
             </View>
 
 
-        </View>
+        </View >
     )
 }
 
@@ -128,9 +131,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         height: 50,
         width: '100%',
-        marginTop: '0.5%',
+        marginTop: '1%',
         alignItems: 'center',
-        elevation: 5
+        elevation: 3
     },
     detailFont: {
         fontSize: 15,
@@ -139,10 +142,10 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
     userimage: {
-        height: '55%',
-        width: '8%',
+        height: '43%',
+        width: '5.5%',
         marginLeft: '3%',
-        tintColor: 'black'
+        tintColor: '#6359d5'
     },
     input: {
         marginLeft: '5%'

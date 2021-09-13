@@ -14,7 +14,7 @@ const register = ({ navigation }) => {
     const authenticate = async () => {
       axios
         .post(
-          "http://34.126.164.13/insert.php",
+          "http://34.126.169.148/insert.php",
           JSON.stringify({
             username: username,
             email: email,
@@ -102,8 +102,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'black',
     fontWeight: 'bold',
-    textDecorationLine: 'underline',
-    color: 'green'
+    color: '#6359d5'
   },
   inputbox: {
     padding: 10

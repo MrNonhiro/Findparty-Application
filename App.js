@@ -5,9 +5,11 @@ import Register from './components/register';
 import Loginpage from './components/loginpage';
 import Home from './components/home';
 import Partypage from './components/partypage';
+import Partydetail from './components/partydetail';
 import Storepage from './components/storepage';
 import loggedHome from './components/loggedin/loggedHome';
 import registerStore from './components/registerStore';
+import topnavigator  from'./components/topnavigator';
 
 {
   // loggedin pages
@@ -45,6 +47,7 @@ const App = () => {
         <Stack.Screen name="loginpage" component={Loginpage} options={{ headerShown: false }} />
         <Stack.Screen name="home" component={Home} options={{ headerShown: false }} />
         <Stack.Screen name="partypage" component={Partypage} options={{ headerShown: false }} />
+        <Stack.Screen name="partydetail" component={Partydetail} options={{ headerShown: false }} />
         <Stack.Screen name="storepage" component={Storepage} options={{ headerShown: false }} />
         <Stack.Screen name="loggedHome" component={loggedHome} options={{ headerShown: false }} />
         <Stack.Screen name="registerStore" component={registerStore} options={{ headerShown: false }} />
