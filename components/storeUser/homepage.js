@@ -7,10 +7,12 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
-  SafeAreaView
+  SafeAreaView,
+  Button
 } from 'react-native';
 import { Header } from 'react-native-elements';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function homepage({ navigation }) {
   const [info, setInfo] = useState([]);
@@ -57,6 +59,10 @@ export default function homepage({ navigation }) {
           <View style={styles.box2}>
             <Image source={require('../../images/shirt1.jpg')} style={styles.image} />
             <Text style={styles.text2}> Fashion men shop </Text>
+            <Button color="blue" style={{ fontSize: 20, borderRadius: 10 }}
+              title="add party"
+              onPress={() => navigation.navigate('addparty')}>
+            </Button>
           </View>
         </View>
 

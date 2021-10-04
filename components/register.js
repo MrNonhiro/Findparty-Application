@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Image, ImageBackground, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { Input } from 'react-native-elements';
 
 const register = ({ navigation }) => {
+
+  const [hidePass, setHidePass] = useState("");
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -44,24 +47,42 @@ const register = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={require('../images/loginregiswall.png')} style={styles.image}>
         <View style={styles.headbox}>
           <Text style={styles.text} onPress={() => navigation.navigate('loginpage')}> ลงชื่อเข้าใช้ </Text>
           <Text style={styles.text}> | </Text>
           <Text style={styles.text2}> สมัครสมาชิก </Text>
         </View>
         <View style={styles.inputbox}>
-          <View style={styles.searchbar}>
-            <Image source={require('../images/userpage.png')} style={styles.userimage} />
-            <TextInput onChangeText={usernameHandler} style={styles.placeholder} placeholder="Username" />
+          <View style={styles.detailView}>
+            <Image source={require('../images/user.png')} style={styles.userimage} />
+            <TextInput
+              onChangeText={usernameHandler} style={styles.placeholder}
+              placeholder="ชื่อผู้ใช้"
+            />
           </View>
-          <View style={styles.searchbar}>
-            <Image source={require('../images/email.png')} style={styles.userimage} />
-            <TextInput onChangeText={(text) => setEmail(text)} style={styles.placeholder} placeholder="E-mail" />
+          <View style={styles.detailView}>
+            <Image source={require('../images/emailuser.png')} style={styles.userimage} />
+            <TextInput
+              onChangeText={(text) => setEmail(text)} style={styles.placeholder}
+              placeholder="อีเมลล์"
+            />
           </View>
-          <View style={styles.searchbar}>
+          <View style={styles.detailView}>
             <Image source={require('../images/password.png')} style={styles.userimage} />
-            <TextInput onChangeText={(text) => setPassword(text)} style={styles.placeholder} placeholder="Password" keyboardType='numberic' />
+            <TextInput
+              onChangeText={(text) => setPassword(text)} style={styles.placeholder}
+              placeholder="รหัสผ่าน"
+              secureTextEntry={hidePass ? true : false}
+            />
+            <Icon
+              style= {{
+                padding: 5
+              }}
+              name={hidePass ? 'eye-slash' : 'eye'}
+              size={15}
+              color="grey"
+              onPress={() => setHidePass(!hidePass)}
+            />
           </View>
           <View style={styles.buttombox}>
             <Text onPress={() => navigation.navigate('registerStore')} style={{ alignSelf: 'center', marginBottom: '1%' }}> สมัครสมาชิกร้านค้า? </Text>
@@ -74,7 +95,6 @@ const register = ({ navigation }) => {
             </View>
           </TouchableOpacity>
         </View>
-      </ImageBackground>
     </View>
   )
 }
@@ -82,7 +102,8 @@ const register = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column"
+    flexDirection: "column",
+    marginTop: '40%'
   },
   image: {
     flex: 1,
@@ -105,7 +126,7 @@ const styles = StyleSheet.create({
     color: '#6359d5'
   },
   inputbox: {
-    padding: 10
+    alignItems: 'center'
   },
   searchbar: {
     height: '8%',
@@ -123,9 +144,11 @@ const styles = StyleSheet.create({
     marginLeft: 15
   },
   userimage: {
-    height: '5%',
-    width: '11%',
-    paddingTop: '11%'
+    height: '43%',
+    width: '5.5%',
+    marginLeft: '5%',
+    marginRight: '0.5%',
+    tintColor: '#6359d5'
   },
   buttombox: {
     alignSelf: 'center',
@@ -134,17 +157,28 @@ const styles = StyleSheet.create({
   submit: {
     marginTop: '20%',
     alignSelf: 'center',
-    backgroundColor: 'green',
+    backgroundColor: '#6359d5',
     borderRadius: 25,
     borderWidth: 10,
-    borderColor: 'green',
+    borderColor: '#6359d5',
     elevation: 10
   },
   submittext: {
     fontSize: 25,
     color: 'white',
     borderTopWidth: 0
-  }
+  },
+  detailView: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    height: 50,
+    width: '85%',
+    marginTop: '1%',
+    alignItems: 'center',
+    elevation: 3,
+    borderRadius: 30,
+    marginTop: '3%',
+  },
 })
 
 export default register;

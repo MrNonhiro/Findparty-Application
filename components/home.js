@@ -77,7 +77,6 @@ export default function Home({ navigation }) {
                 style={{ marginTop: -40 }}
                 data={info}
                 numColumns={2}
-                keyExtractor={(items) => items.id}
                 renderItem={({ item }) => (
                   <TouchableOpacity onPress={() => navigation.navigate('partydetail', { id: item.party_id })}>
                     <View style={styles.insidegoodsbox} elevation={5}>
@@ -116,6 +115,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    marginTop: '6%'
   },
   container2: {
     flex: 1,

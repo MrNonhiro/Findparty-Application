@@ -30,7 +30,13 @@ import received from './components/loggedin/statusPage/received';
   // store user page
 }
 import homepage from './components/storeUser/homepage';
+import addparty from './components/storeUser/addparty';
 
+{
+  // party page
+}
+import cmPage from './components/partyPage/cmPage';
+import partymember from './components/partyPage/partymember';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -71,6 +77,13 @@ const App = () => {
           // store user page
         }
         <Stack.Screen name="homepage" component={homepage} options={{ headerShown: false }} />
+        <Stack.Screen name="addparty" component={addparty} options={{ headerShown: false }} />
+
+        {
+          // store user page
+        }
+        <Stack.Screen name="cmPage" component={cmPage} options={{ headerShown: false }} />
+        <Stack.Screen name="partymember" component={partymember} options={{ headerShown: false }} />
 
       </Stack.Navigator>
     </NavigationContainer>

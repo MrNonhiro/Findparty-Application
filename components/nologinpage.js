@@ -30,6 +30,10 @@ const nologinpage = ({ navigation }) => {
                     title="store user page"
                     onPress={() => navigation.navigate('homepage')}>
                 </Button>
+                <Button color="black" style={{ fontSize: 20, borderRadius: 10 }}
+                    title="party comment"
+                    onPress={() => navigation.navigate('cmPage')}>
+                </Button>
             </View>
         </View>
     )

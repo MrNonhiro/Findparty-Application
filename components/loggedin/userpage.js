@@ -12,8 +12,8 @@ export default function userpage({ navigation }) {
         // Post updated, do something with route.params.post
         // For example, send the post to the server 
 
-        axios.get('http://34.126.169.148/showuser.php',{
-            params:{
+        axios.get('http://34.87.24.98/showuser.php', {
+            params: {
                 user_id: user_id
             }
         })
@@ -23,7 +23,7 @@ export default function userpage({ navigation }) {
             .catch(err => {
                 console.log(err)
             })
-    },[info])
+    }, [info])
 
     useEffect(() => {
         // Post updated, do something with route.params.post
@@ -38,7 +38,7 @@ export default function userpage({ navigation }) {
             })
     })
 
-    const [user_id,setUser_id] = useState([]);
+    const [user_id, setUser_id] = useState([]);
 
     return (
         <View style={styles.container}>
@@ -82,14 +82,14 @@ export default function userpage({ navigation }) {
                             </TouchableOpacity>
 
                             <View style={styles.box2}>
-                                <Image source={require('../../images/shirt1.jpg')} style={styles.image} />
-                                <Text style={styles.text2}>{item.user_display} </Text>
+                                <Image source={{uri:item.user_profile}} style={styles.image} />
+                                <Text style={styles.text2}> {item.user_display} </Text>
                             </View>
 
                             <View style={{
                                 flexDirection: 'row',
                                 justifyContent: 'center',
-                                marginTop: '10%'
+                                marginTop: '4%'
                             }}>
                                 <TouchableOpacity>
                                     <View style={{ marginRight: '2.5%' }}>
@@ -175,8 +175,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     box2: {
-        alignItems: 'center',
-        height: '30%',
+        alignItems: 'center'
     },
     text: {
         fontSize: 30,
@@ -192,7 +191,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '50%',
-        height: '100%',
+        height: 200,
         borderRadius: 120,
     },
     statusimage1: {
@@ -224,7 +223,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignSelf: 'center',
         marginBottom: '20%',
-        height: 150,
+        height: 90,
         borderRadius: 20,
         backgroundColor: 'white',
         borderTopWidth: 1,

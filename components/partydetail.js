@@ -75,15 +75,14 @@ export default function partydetail({ navigation, route }) {
                         leftComponent={
                             <View style={{ marginTop: '8%' }}>
                                 <TouchableOpacity
-                                    onPress={() => navigation.goBack()}>
+                                    onPress={() => { navigation.goBack() }}>
                                     <Image source={require('../images/back.png')} style={{
                                         height: 25,
                                         width: 25,
                                         tintColor: '#6359d5',
                                     }} />
                                 </TouchableOpacity>
-                            </View>
-                        }
+                            </View>}
                         centerComponent={{ text: 'ปาร์ตี้', style: { color: 'black', fontSize: 25 } }}
                         containerStyle={{
                             backgroundColor: 'white',
@@ -180,7 +179,7 @@ export default function partydetail({ navigation, route }) {
                                         </Text>
                                     </View>
                                     <View>
-                                        <TouchableOpacity>
+                                        <TouchableOpacity onPress={() => Alert.alert("กรุณาเข้าสู่ระบบ")}>
                                             <View style={{
                                                 backgroundColor: '#6359d5',
                                                 alignItems: 'center',
@@ -192,7 +191,7 @@ export default function partydetail({ navigation, route }) {
                                                 alignSelf: 'center',
                                                 borderRadius: 10
                                             }}>
-                                                <Text onPress={() => Alert.alert("กรุณาเข้าสู่ระบบ")}
+                                                <Text
                                                     style={{
                                                         fontSize: 16,
                                                         color: 'white',
@@ -207,12 +206,12 @@ export default function partydetail({ navigation, route }) {
                                         <Text style={{ fontSize: 16, color: '#6359d5', fontWeight: 'bold', alignSelf: 'center' }}> ------------------------------------------------------------- </Text>
                                     </View>
                                     <View style={{ flexDirection: 'row' }}>
-                                        <Text style={{ fontSize: 16 }}> สร้างกลุ่มโดย </Text>
+                                        <Text style={{ fontSize: 16, fontWeight: 'bold' }}> สร้างกลุ่มโดย </Text>
                                     </View>
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={() => navigation.navigate('storepage', { id: item.store_id })}>
                                         <View style={{ flexDirection: 'row', marginTop: '2%' }}>
                                             <Image source={require('../images/shirt1.jpg')} style={styles.storelogo} />
-                                            <Text onPress={() => navigation.navigate('storepage')}
+                                            <Text
                                                 style={{
                                                     fontSize: 18,
                                                     textAlign: 'center',

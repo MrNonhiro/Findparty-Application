@@ -19,31 +19,25 @@ import * as FileSystem from 'expo-file-system';
 
 export default function usersetting({ navigation }) {
     const [pickedImagePath, setPickedImagePath] = useState('');
-    useEffect(() => {
-        (async () => {
-            if (Platform.OS !== 'web') {
-                const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-                if (status !== 'granted') {
-                    alert('Sorry, we need camera roll permissions to make this work!');
-                }
-            }
-        })();
-    }, []);
+    const showImagePicker = async () => {
+        // Ask the user for the permission to access the media library 
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-        const base64 = await FileSystem.readAsStringAsync(result.uri, { encoding: 'base64' });
-        console.log(base64);
-        const base = 'data:image/jpeg;base64,'
-        if (!result.cancelled) {
-            setPickedImagePath(base + base64);
+        if (permissionResult.granted === false) {
+            alert("You've refused to allow this appp to access your photos!");
+            return;
         }
-    };
+
+        const result = await ImagePicker.launchImageLibraryAsync();
+
+        // Explore the result
+        console.log(result);
+
+        if (!result.cancelled) {
+            setPickedImagePath(result.uri);
+            console.log(result.uri);
+        }
+    }
 
     const openCamera = async () => {
         // Ask the user for the permission to access the camera
@@ -107,32 +101,20 @@ export default function usersetting({ navigation }) {
     })
 
     const [user_id, setUser_id] = useState([]);
-    let [isSubmit, setIsSubmit] = useState(false);
 
+    const [currentDate, setCurrentDate] = useState('');
     useEffect(() => {
-        const authenticate = async () => {
-            axios
-                .post("http://34.87.24.98/useredit.php",
-                    JSON.stringify({
-                        user_id: user_id,
-                        url: pickedImagePath,
-                    })
-                )
-                .then((response) => {
-                    if (response.data == "ok") {
-                        alert(response.data)
-                        setIsSubmit(false)
-                    } else {
-                        alert(JSON.stringify(response.data));
-                        setIsSubmit(false)
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        };
-        if (isSubmit) authenticate();
-    }, [isSubmit]);
+        var date = new Date().getDate(); //Current Date
+        var month = new Date().getMonth() + 1; //Current Month
+        var year = new Date().getFullYear(); //Current Year
+        var hours = new Date().getHours(); //Current Hours
+        var min = new Date().getMinutes(); //Current Minutes
+        var sec = new Date().getSeconds(); //Current Seconds
+        setCurrentDate(
+            date + '/' + month + '/' + year
+            + ' ' + hours + ':' + min + ':' + sec
+        );
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -148,7 +130,7 @@ export default function usersetting({ navigation }) {
                             }} />
                         </TouchableOpacity>
                     </View>}
-                centerComponent={{ text: 'แก้ไขข้อมูลส่วนตัว', style: { color: 'black', fontSize: 25 } }}
+                centerComponent={{ text: 'เพิ่มปาร์ตี้', style: { color: 'black', fontSize: 25 } }}
                 containerStyle={{
                     backgroundColor: 'white',
                     height: '18%',
@@ -157,7 +139,7 @@ export default function usersetting({ navigation }) {
                 }}
                 rightComponent={
                     <View style={{ marginTop: '4%' }}>
-                        <TouchableOpacity onPress={() => { setIsSubmit(true) }}>
+                        <TouchableOpacity onPress={() => { navigation.navigate('userpage') }}>
                             <Text style={{
                                 color: '#6359d5',
                                 fontSize: 20
@@ -182,7 +164,7 @@ export default function usersetting({ navigation }) {
                     }
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ flexDirection: 'row', marginTop: 15 }}>
-                            <TouchableOpacity onPress={pickImage}>
+                            <TouchableOpacity onPress={showImagePicker}>
                                 <View style={{
                                     backgroundColor: '#6359d5',
                                     height: 40,
@@ -223,78 +205,78 @@ export default function usersetting({ navigation }) {
                     </View>
                 </View>
                 <View style={{ flex: 1, width: '100%', marginTop: '6%' }}>
-                    <FlatList
-                        style={{ marginTop: -40 }}
-                        data={info}
-                        renderItem={({ item }) => (
-                            <View>
-                                <View style={{
-                                    height: 20,
-                                    marginTop: '20%',
-                                    marginBottom: 10,
-                                    alignSelf: 'flex-start'
-                                }}>
-                                    <Text style={{
-                                        fontSize: 20,
-                                        color: 'black',
+                    {/* flatlist */}
+                    <View>
+                        <View style={{
+                            height: 20,
+                            marginTop: '20%',
+                            marginBottom: 10,
+                            alignSelf: 'flex-start'
+                        }}>
+                            <Text style={{
+                                fontSize: 20,
+                                color: 'black',
 
-                                    }}> ข้อมูลส่วนตัว {item.user_display} </Text>
-                                </View>
-                                <View style={styles.detailView}>
-                                    <Image source={require('../../images/user.png')} style={styles.userimage} />
-                                    <TextInput
-                                        style={styles.input}
-                                        value={item.user_display}
-                                    />
-                                </View>
-                                <View style={styles.detailView}>
-                                    <Image source={require('../../images/phone.png')} style={styles.userimage} />
-                                    <TextInput
-                                        style={styles.input}
-                                        placeholder={item.user_tel}
-                                        keyboardType="numeric"
-                                    />
-                                </View>
-                                <View style={styles.detailView}>
-                                    <Image source={require('../../images/emailuser.png')} style={styles.userimage} />
-                                    <TextInput
-                                        style={styles.input}
-                                        placeholder={item.user_email}
-                                    />
-                                </View>
-                                <TouchableOpacity style={styles.detailView} onPress={() => navigation.navigate('useraddressEdit')}>
-                                    <View style={styles.detailView}>
-                                        <Image source={require('../../images/address.png')} style={styles.userimage} />
-                                        <TextInput
-                                            style={styles.input}
-                                            placeholder="ที่อยู่"
-                                        />
-                                    </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => navigation.navigate('nologinpage', AsyncStorage.removeItem('user_id'))}>
-                                    <View style={{
-                                        backgroundColor: 'red',
-                                        alignItems: 'center',
-                                        height: 35,
-                                        flexDirection: 'row',
-                                        justifyContent: 'center',
-                                        marginTop: '5%',
-                                        width: '90%',
-                                        alignSelf: 'center',
-                                        borderRadius: 10
-                                    }}>
-                                        <Text style={{
-                                            fontSize: 16,
-                                            color: 'white',
-                                            marginRight: '3%',
-                                            fontWeight: 'bold'
-                                        }}> ออกจากระบบ </Text>
-                                    </View>
-                                </TouchableOpacity>
+                            }}> ข้อมูลปาร์ตี้ </Text>
+                        </View>
+                        <View style={styles.detailView}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="ชื่อปาร์ตี้"
+                            />
+                        </View>
+                        <View style={styles.detailView}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="ประเภท"
+                                keyboardType="numeric"
+                            />
+                        </View>
+                        <View style={styles.detailView}>
+                            <Text style={styles.input}> เวลาที่จัดตั้งกลุ่ม </Text>
+                            <Text style={styles.input}> {currentDate} </Text>
+                        </View>
+                        <View style={styles.detailView}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="ราคาหารต่อคน"
+                            />
+                        </View>
+                        <View style={styles.detailView}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="จำนวนสมาชิกกลุ่ม"
+                            />
+                        </View>
+                        <View style={styles.detailView}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="รายละเอียด"
+                            />
+                        </View>
+                        <TouchableOpacity onPress={() => navigation.navigate('nologinpage', AsyncStorage.removeItem('user_id'))}>
+                            <View style={{
+                                backgroundColor: 'red',
+                                alignItems: 'center',
+                                height: 35,
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                marginTop: '5%',
+                                width: '90%',
+                                alignSelf: 'center',
+                                borderRadius: 10
+                            }}>
+                                <Text style={{
+                                    fontSize: 16,
+                                    color: 'white',
+                                    marginRight: '3%',
+                                    fontWeight: 'bold'
+                                }}> ออกจากระบบ </Text>
                             </View>
+                        </TouchableOpacity>
+                    </View>
 
-                        )}
-                    />
+
 
                 </View>
 
