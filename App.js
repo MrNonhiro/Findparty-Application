@@ -1,4 +1,5 @@
 import React from 'react';
+import { LogBox } from 'react-native';
 import Navigator from './components/navigator';
 import nologinpage from './components/nologinpage';
 import Register from './components/register';
@@ -9,7 +10,7 @@ import Partydetail from './components/partydetail';
 import Storepage from './components/storepage';
 import loggedHome from './components/loggedin/loggedHome';
 import registerStore from './components/registerStore';
-import topnavigator  from'./components/topnavigator';
+import topnavigator from './components/topnavigator';
 
 {
   // loggedin pages
@@ -40,6 +41,8 @@ import partymember from './components/partyPage/partymember';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+
+LogBox.ignoreAllLogs();
 
 const Stack = createStackNavigator();
 

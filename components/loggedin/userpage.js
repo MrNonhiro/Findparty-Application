@@ -7,38 +7,40 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function userpage({ navigation }) {
 
-    const [info, setInfo] = useState([]);
+    const [user_id, setUser_id] = useState([]);
+    const [userdata, setUserdata] = useState([]);
+    const [username, setUsername] = useState([]);
+    const [userdisplay, setUsedisplay] = useState([]);
+    const [user_tel, setUsertel] = useState([]);
+    const [email, setEmail] = useState([]);
+    const [user_profile, setImage] = useState([]);
     useEffect(() => {
-        // Post updated, do something with route.params.post
-        // For example, send the post to the server 
+        AsyncStorage.getItem('user_id')
+            .then((value) => {
+                setUser_id(value);
 
+            })
+    })
+    useEffect(() => {
         axios.get('http://34.87.24.98/showuser.php', {
             params: {
                 user_id: user_id
             }
         })
             .then(response => {
-                setInfo(response.data);
+                setUserdata(response.data.all);
+                setUsername(response.data.username)
+                setUsedisplay(response.data.userdisplay)
+                setUsertel(response.data.user_tel)
+                setEmail(response.data.email)
+                setImage(response.data.user_profile)
             })
             .catch(err => {
                 console.log(err)
             })
-    }, [info])
 
-    useEffect(() => {
-        // Post updated, do something with route.params.post
-        // For example, send the post to the server 
-
-        AsyncStorage.getItem('user_id')
-            .then(response => {
-                setUser_id(response);
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    })
-
-    const [user_id, setUser_id] = useState([]);
+    }, [userdata])
+    console.log(userdata)
 
     return (
         <View style={styles.container}>
@@ -65,7 +67,7 @@ export default function userpage({ navigation }) {
             <View style={{ flex: 1 }}>
                 <FlatList
                     style={{ marginTop: -40 }}
-                    data={info}
+                    data={userdata}
                     renderItem={({ item }) => (
                         <View>
                             <TouchableOpacity onPress={() => navigation.navigate('usersetting', { id: item.user_id })}>
@@ -82,7 +84,7 @@ export default function userpage({ navigation }) {
                             </TouchableOpacity>
 
                             <View style={styles.box2}>
-                                <Image source={{uri:item.user_profile}} style={styles.image} />
+                                <Image source={{ uri: item.user_profile }} style={styles.image} />
                                 <Text style={styles.text2}> {item.user_display} </Text>
                             </View>
 

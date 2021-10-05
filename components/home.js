@@ -21,7 +21,7 @@ export default function Home({ navigation }) {
     // Post updated, do something with route.params.post
     // For example, send the post to the server 
 
-    axios.get('http://34.126.169.148/showparty.php')
+    axios.get('http://34.87.24.98/showparty.php')
       .then(response => {
         setInfo(response.data);
       })

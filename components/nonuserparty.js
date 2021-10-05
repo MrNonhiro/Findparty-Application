@@ -6,7 +6,7 @@ const nonuserparty = () => {
     return(
         <View style={styles.container}>
              <Header
-                centerComponent={{ text: 'ข้อมูลส่วนตัว', style: { color: 'black', fontSize: 25 } }}
+                centerComponent={{ text: 'ปาร์ตี้', style: { color: 'black', fontSize: 25 } }}
                 containerStyle={{
                     backgroundColor: 'white',
                     height: '18%',

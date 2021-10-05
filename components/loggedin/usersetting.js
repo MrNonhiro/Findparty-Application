@@ -18,6 +18,42 @@ import axios from 'axios';
 import * as FileSystem from 'expo-file-system';
 
 export default function usersetting({ navigation }) {
+
+    const [user_id, setUser_id] = useState();
+    const [userdata, setUserdata] = useState([]);
+    const [username, setUsername] = useState();
+    const [userdisplay, setUsedisplay] = useState();
+    const [user_tel, setUsertel] = useState();
+    const [email, setEmail] = useState();
+    const [user_profile, setImage] = useState();
+    useEffect(() => {
+        AsyncStorage.getItem('user_id')
+            .then((value) => {
+                setUser_id(value);
+
+            })
+    })
+    useEffect(() => {
+        axios.get('http://34.87.24.98/showuser.php', {
+            params: {
+                user_id: user_id
+            }
+        })
+            .then(response => {
+                setUserdata(response.data.all);
+                setUsername(response.data.username)
+                setUsedisplay(response.data.user_display)
+                setUsertel(response.data.user_tel)
+                setEmail(response.data.email)
+                setImage(response.data.user_profile)             
+            })
+            .catch(err => {
+                console.log(err)
+            })
+
+    }, [user_id])
+    console.log(userdata)
+
     const [pickedImagePath, setPickedImagePath] = useState('');
     useEffect(() => {
         (async () => {
@@ -75,64 +111,6 @@ export default function usersetting({ navigation }) {
     }
     */}
 
-    const [info, setInfo] = useState([]);
-    useEffect(() => {
-        // Post updated, do something with route.params.post
-        // For example, send the post to the server 
-
-        axios.get('http://34.87.24.98/showuser.php', {
-            params: {
-                user_id: user_id
-            }
-        })
-            .then(response => {
-                setInfo(response.data);
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }, [info])
-
-    useEffect(() => {
-        // Post updated, do something with route.params.post
-        // For example, send the post to the server 
-
-        AsyncStorage.getItem('user_id')
-            .then(response => {
-                setUser_id(response);
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    })
-
-    const [user_id, setUser_id] = useState([]);
-    let [isSubmit, setIsSubmit] = useState(false);
-
-    useEffect(() => {
-        const authenticate = async () => {
-            axios
-                .post("http://34.87.24.98/useredit.php",
-                    JSON.stringify({
-                        user_id: user_id,
-                        url: pickedImagePath,
-                    })
-                )
-                .then((response) => {
-                    if (response.data == "ok") {
-                        alert(response.data)
-                        setIsSubmit(false)
-                    } else {
-                        alert(JSON.stringify(response.data));
-                        setIsSubmit(false)
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        };
-        if (isSubmit) authenticate();
-    }, [isSubmit]);
 
     return (
         <View style={styles.container}>
@@ -225,7 +203,7 @@ export default function usersetting({ navigation }) {
                 <View style={{ flex: 1, width: '100%', marginTop: '6%' }}>
                     <FlatList
                         style={{ marginTop: -40 }}
-                        data={info}
+                        data={userdata}
                         renderItem={({ item }) => (
                             <View>
                                 <View style={{
@@ -244,31 +222,33 @@ export default function usersetting({ navigation }) {
                                     <Image source={require('../../images/user.png')} style={styles.userimage} />
                                     <TextInput
                                         style={styles.input}
-                                        value={item.user_display}
+                                        value={userdisplay}
+                                        onChangeText={setUsedisplay}
                                     />
                                 </View>
                                 <View style={styles.detailView}>
                                     <Image source={require('../../images/phone.png')} style={styles.userimage} />
                                     <TextInput
                                         style={styles.input}
-                                        placeholder={item.user_tel}
+                                        value={user_tel}
                                         keyboardType="numeric"
+                                        onChangeText={setUsertel}
                                     />
                                 </View>
                                 <View style={styles.detailView}>
                                     <Image source={require('../../images/emailuser.png')} style={styles.userimage} />
                                     <TextInput
                                         style={styles.input}
-                                        placeholder={item.user_email}
+                                        value={email}
+                                        onChangeText={setEmail}
                                     />
                                 </View>
-                                <TouchableOpacity style={styles.detailView} onPress={() => navigation.navigate('useraddressEdit')}>
+                                <TouchableOpacity style={styles.detailView} onPress={() => navigation.navigate('useraddressEdit', { id: item.user_id })}>
                                     <View style={styles.detailView}>
                                         <Image source={require('../../images/address.png')} style={styles.userimage} />
-                                        <TextInput
-                                            style={styles.input}
-                                            placeholder="ที่อยู่"
-                                        />
+                                        <Text style={{
+                                            color: 'gray'
+                                        }}> ที่อยู่ </Text>
                                     </View>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => navigation.navigate('nologinpage', AsyncStorage.removeItem('user_id'))}>

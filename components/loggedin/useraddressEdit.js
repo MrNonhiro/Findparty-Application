@@ -2,31 +2,42 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Platform } from 'react-native';
 import { Header } from 'react-native-elements';
 import * as Location from 'expo-location';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 export default function useraddressEdit({ navigation }) {
-    const [location, setLocation] = useState(null);
-    const [errorMsg, setErrorMsg] = useState(null);
+    const [info, setInfo] = useState([]);
+    useEffect(() => {
+        // Post updated, do something with route.params.post
+        // For example, send the post to the server 
+
+        axios.get('http://34.87.24.98/showuser.php', {
+            params: {
+                user_id: user_id
+            }
+        })
+            .then(response => {
+                setInfo(response.data);
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }, [info])
 
     useEffect(() => {
-        (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
-                return;
-            }
+        // Post updated, do something with route.params.post
+        // For example, send the post to the server 
 
-            let location = await Location.getCurrentPositionAsync({});
-            setLocation(location);
-        })();
-    }, []);
+        AsyncStorage.getItem('user_id')
+            .then(response => {
+                setUser_id(response);
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    })
 
-    let text = 'Waiting..';
-    if (errorMsg) {
-        text = errorMsg;
-    } else if (location) {
-        text = JSON.stringify(location);
-    }
-
+    const [user_id, setUser_id] = useState([]);
 
     return (
         <View style={styles.container}>
@@ -49,7 +60,18 @@ export default function useraddressEdit({ navigation }) {
                     borderBottomLeftRadius: 20,
                     borderBottomRightRadius: 20
                 }}
+                rightComponent={
+                    <View style={{ marginTop: '4%' }}>
+                        <TouchableOpacity>
+                            <Text style={{
+                                color: '#6359d5',
+                                fontSize: 20
+                            }}> บันทึก </Text>
+                        </TouchableOpacity>
+                    </View>
+                }
             />
+
             <View style={{
                 height: 20,
                 marginTop: '2%',
@@ -63,47 +85,56 @@ export default function useraddressEdit({ navigation }) {
 
                 }}> ช่องทางการติดต่อ </Text>
             </View>
-            <View style={styles.detailView}>
-                <Image source={require('../../images/user.png')} style={styles.userimage} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="ชื่อ นามสกุล"
+            <View style={{ flex: 1, width: '100%', marginTop: '6%' }}>
+                <FlatList
+                    style={{ marginTop: -40 }}
+                    data={info}
+                    renderItem={({ item }) => (
+                        <View>
+                            <View style={styles.detailView}>
+                                <Image source={require('../../images/user.png')} style={styles.userimage} />
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder={item.user_display}
+                                />
+                            </View>
+                            <View style={styles.detailView}>
+                                <Image source={require('../../images/phone.png')} style={styles.userimage} />
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="เบอร์โทรศัพท์"
+                                    keyboardType="numeric"
+                                />
+                            </View>
+
+                            <View style={{
+                                height: 20,
+                                marginTop: '8%',
+                                marginLeft: '1%',
+                                marginBottom: 10,
+                                alignSelf: 'flex-start'
+                            }}>
+                                <Text style={{
+                                    fontSize: 20,
+                                    color: 'black',
+
+                                }}> ที่อยู่ </Text>
+                            </View>
+                            <View style={styles.detailView}>
+                                <Text style={styles.paragraph}></Text>
+                            </View>
+                            <View style={styles.detailView}>
+                                <Image source={require('../../images/address.png')} style={styles.userimage} />
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="รายละเอียดที่อยู่"
+                                />
+                            </View>
+
+                        </View>
+                    )}
                 />
             </View>
-            <View style={styles.detailView}>
-                <Image source={require('../../images/phone.png')} style={styles.userimage} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="เบอร์โทรศัพท์"
-                    keyboardType="numeric"
-                />
-            </View>
-
-            <View style={{
-                height: 20,
-                marginTop: '8%',
-                marginLeft: '1%',
-                marginBottom: 10,
-                alignSelf: 'flex-start'
-            }}>
-                <Text style={{
-                    fontSize: 20,
-                    color: 'black',
-
-                }}> ที่อยู่ </Text>
-            </View>
-            <View style={styles.detailView}>
-                <Text style={styles.paragraph}>{text}</Text>
-            </View>
-            <View style={styles.detailView}>
-                <Image source={require('../../images/address.png')} style={styles.userimage} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="รายละเอียดที่อยู่"
-                />
-            </View>
-
-
         </View >
     )
 }
