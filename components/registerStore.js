@@ -18,7 +18,7 @@ const registerStore = ({ navigation }) => {
     const authenticate = async () => {
       axios
         .post(
-          "http://34.126.169.148/registerstore.php",
+          "http://34.124.194.224/registerstore.php",
           JSON.stringify({
             username: username,
             email: email,

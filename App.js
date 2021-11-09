@@ -5,12 +5,12 @@ import nologinpage from './components/nologinpage';
 import Register from './components/register';
 import Loginpage from './components/loginpage';
 import Home from './components/home';
-import Partypage from './components/partypage';
 import Partydetail from './components/partydetail';
 import Storepage from './components/storepage';
 import loggedHome from './components/loggedin/loggedHome';
 import registerStore from './components/registerStore';
 import topnavigator from './components/topnavigator';
+import storelogin from './components/storelogin';
 
 {
   // loggedin pages
@@ -32,12 +32,18 @@ import received from './components/loggedin/statusPage/received';
 }
 import homepage from './components/storeUser/homepage';
 import addparty from './components/storeUser/addparty';
+import storepartydetail from './components/storeUser/storepartydetail';
+import storedelivery from './components/storeUser/status/storedelivery';
+import storedeliveryWaiting from './components/storeUser/status/storedeliveryWaiting';
+import storepaymentWaiting from './components/storeUser/status/storepaymentWaiting';
+import storerecieved from './components/storeUser/status/storerecieved';
 
 {
   // party page
 }
 import cmPage from './components/partyPage/cmPage';
 import partymember from './components/partyPage/partymember';
+import partypage from './components/partyPage/partypage';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -55,11 +61,11 @@ const App = () => {
         <Stack.Screen name="register" component={Register} options={{ headerShown: false }} />
         <Stack.Screen name="loginpage" component={Loginpage} options={{ headerShown: false }} />
         <Stack.Screen name="home" component={Home} options={{ headerShown: false }} />
-        <Stack.Screen name="partypage" component={Partypage} options={{ headerShown: false }} />
         <Stack.Screen name="partydetail" component={Partydetail} options={{ headerShown: false }} />
         <Stack.Screen name="storepage" component={Storepage} options={{ headerShown: false }} />
         <Stack.Screen name="loggedHome" component={loggedHome} options={{ headerShown: false }} />
         <Stack.Screen name="registerStore" component={registerStore} options={{ headerShown: false }} />
+        <Stack.Screen name="storelogin" component={storelogin} options={{ headerShown: false }} />
 
         {
           // loggedin pages
@@ -81,12 +87,18 @@ const App = () => {
         }
         <Stack.Screen name="homepage" component={homepage} options={{ headerShown: false }} />
         <Stack.Screen name="addparty" component={addparty} options={{ headerShown: false }} />
+        <Stack.Screen name="storepartydetail" component={storepartydetail} options={{ headerShown: false }} />
+        <Stack.Screen name="storedelivery" component={storedelivery} options={{ headerShown: false }} />
+        <Stack.Screen name="storedeliveryWaiting" component={storedeliveryWaiting} options={{ headerShown: false }} />
+        <Stack.Screen name="storepaymentWaiting" component={storepaymentWaiting} options={{ headerShown: false }} />
+        <Stack.Screen name="storerecieved" component={storerecieved} options={{ headerShown: false }} />
 
         {
           // store user page
         }
         <Stack.Screen name="cmPage" component={cmPage} options={{ headerShown: false }} />
         <Stack.Screen name="partymember" component={partymember} options={{ headerShown: false }} />
+        <Stack.Screen name="partypage" component={partypage} options={{ headerShown: false }} />
 
       </Stack.Navigator>
     </NavigationContainer>

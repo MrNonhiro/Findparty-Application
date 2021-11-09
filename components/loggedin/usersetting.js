@@ -5,8 +5,6 @@ import {
     StyleSheet,
     Image,
     TouchableOpacity,
-    Animated,
-    Dimensions,
     TextInput,
     FlatList
 } from 'react-native';
@@ -34,7 +32,7 @@ export default function usersetting({ navigation }) {
             })
     })
     useEffect(() => {
-        axios.get('http://34.87.24.98/showuser.php', {
+        axios.get('http://34.124.194.224/showuser.php', {
             params: {
                 user_id: user_id
             }

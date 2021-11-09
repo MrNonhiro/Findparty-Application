@@ -24,7 +24,7 @@ export default function loginpage({ navigation }) {
     const authenticate = async () => {
       axios
         .post(
-          "http://34.87.24.98/login.php",
+          "http://34.124.194.224/login.php",
           JSON.stringify({
             password: password,
             username: username
@@ -84,7 +84,7 @@ export default function loginpage({ navigation }) {
           </View>
           <View style={styles.buttombox}>
             <Text style={{
-            }}> ลืมรหัสผ่าน? </Text>
+            }} onPress={() => navigation.navigate('storelogin')}> เข้าสู่ระบบร้านค้า </Text>
           </View>
           <View style={styles.buttombox2}>
             <Text style={{ alignSelf: 'center', marginTop: '5%' }}> เข้าสู่ระบบโดย </Text>
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
   buttombox: {
     marginTop: '3%',
-    marginLeft: '60%'
+    marginLeft: '55%'
   },
   buttombox2: {
   },

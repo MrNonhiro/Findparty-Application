@@ -22,7 +22,7 @@ export default function partypage({ navigation, route }) {
     // Post updated, do something with route.params.post
     // For example, send the post to the server 
 
-    axios.get('http://34.126.169.148/showsingle.php', {
+    axios.get('http://34.124.194.224/showsingle.php', {
       params: {
         id: id
       }

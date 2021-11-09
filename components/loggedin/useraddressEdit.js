@@ -11,7 +11,7 @@ export default function useraddressEdit({ navigation }) {
         // Post updated, do something with route.params.post
         // For example, send the post to the server 
 
-        axios.get('http://34.87.24.98/showuser.php', {
+        axios.get('http://34.124.194.224/showuser.php', {
             params: {
                 user_id: user_id
             }

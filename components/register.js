@@ -17,7 +17,7 @@ const register = ({ navigation }) => {
     const authenticate = async () => {
       axios
         .post(
-          "http://34.126.169.148/insert.php",
+          "http://34.124.194.224/insert.php",
           JSON.stringify({
             username: username,
             email: email,
@@ -47,54 +47,61 @@ const register = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-        <View style={styles.headbox}>
-          <Text style={styles.text} onPress={() => navigation.navigate('loginpage')}> ลงชื่อเข้าใช้ </Text>
-          <Text style={styles.text}> | </Text>
-          <Text style={styles.text2}> สมัครสมาชิก </Text>
+      <View style={styles.headbox}>
+        <Text style={styles.text} onPress={() => navigation.navigate('loginpage')}> ลงชื่อเข้าใช้ </Text>
+        <Text style={styles.text}> | </Text>
+        <Text style={styles.text2}> สมัครสมาชิก </Text>
+      </View>
+      <View style={styles.inputbox}>
+        <View style={styles.detailView}>
+          <Image source={require('../images/user.png')} style={styles.userimage} />
+          <TextInput
+            onChangeText={usernameHandler} style={styles.placeholder}
+            placeholder="ชื่อผู้ใช้"
+          />
         </View>
-        <View style={styles.inputbox}>
-          <View style={styles.detailView}>
-            <Image source={require('../images/user.png')} style={styles.userimage} />
-            <TextInput
-              onChangeText={usernameHandler} style={styles.placeholder}
-              placeholder="ชื่อผู้ใช้"
-            />
-          </View>
-          <View style={styles.detailView}>
-            <Image source={require('../images/emailuser.png')} style={styles.userimage} />
-            <TextInput
-              onChangeText={(text) => setEmail(text)} style={styles.placeholder}
-              placeholder="อีเมลล์"
-            />
-          </View>
-          <View style={styles.detailView}>
-            <Image source={require('../images/password.png')} style={styles.userimage} />
-            <TextInput
-              onChangeText={(text) => setPassword(text)} style={styles.placeholder}
-              placeholder="รหัสผ่าน"
-              secureTextEntry={hidePass ? true : false}
-            />
-            <Icon
-              style= {{
-                padding: 5
-              }}
-              name={hidePass ? 'eye-slash' : 'eye'}
-              size={15}
-              color="grey"
-              onPress={() => setHidePass(!hidePass)}
-            />
-          </View>
-          <View style={styles.buttombox}>
-            <Text onPress={() => navigation.navigate('registerStore')} style={{ alignSelf: 'center', marginBottom: '1%' }}> สมัครสมาชิกร้านค้า? </Text>
-            <Text style={{ alignSelf: 'center', marginBottom: '1%' }}> หรือ </Text>
-            <Text onPress={() => navigation.goBack()}> ดำเนินการต่อโดยผู้เยี่ยมชม </Text>
-          </View>
-          <TouchableOpacity onPress={() => setSubmit(true)}>
-            <View style={styles.submit}>
-              <Text style={styles.submittext}> สมัครสมาชิก </Text>
-            </View>
-          </TouchableOpacity>
+        <View style={styles.detailView}>
+          <Image source={require('../images/password.png')} style={styles.userimage} />
+          <TextInput
+            onChangeText={(text) => setPassword(text)} style={styles.placeholder}
+            placeholder="รหัสผ่าน"
+            secureTextEntry={hidePass ? true : false}
+          />
+          <Icon
+            style={{
+              padding: 5
+            }}
+            name={hidePass ? 'eye-slash' : 'eye'}
+            size={15}
+            color="grey"
+            onPress={() => setHidePass(!hidePass)}
+          />
         </View>
+        <View style={styles.detailView}>
+          <Image source={require('../images/emailuser.png')} style={styles.userimage} />
+          <TextInput
+            onChangeText={(text) => setEmail(text)} style={styles.placeholder}
+            placeholder="อีเมลล์"
+          />
+        </View>
+        <View style={styles.detailView}>
+          <Image source={require('../images/user.png')} style={styles.userimage} />
+          <TextInput
+            onChangeText={usernameHandler} style={styles.placeholder}
+            placeholder="ชื่อดิสเพลย์"
+          />
+        </View>
+        <View style={styles.buttombox}>
+          <Text onPress={() => navigation.navigate('registerStore')} style={{ alignSelf: 'center', marginBottom: '1%' }}> สมัครสมาชิกร้านค้า? </Text>
+          <Text style={{ alignSelf: 'center', marginBottom: '1%' }}> หรือ </Text>
+          <Text onPress={() => navigation.goBack()}> ดำเนินการต่อโดยผู้เยี่ยมชม </Text>
+        </View>
+        <TouchableOpacity onPress={() => setSubmit(true)}>
+          <View style={styles.submit}>
+            <Text style={styles.submittext}> สมัครสมาชิก </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }

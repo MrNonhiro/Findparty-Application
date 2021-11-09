@@ -4,7 +4,7 @@ import { Header } from 'react-native-elements'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function paymentWating({ navigation }) {
+export default function storepaymentWaiting({ navigation }) {
 
     const [info, setInfo] = useState([]);
     useEffect(() => {
@@ -50,31 +50,31 @@ export default function paymentWating({ navigation }) {
                         numColumns={1}
                         renderItem={({ item }) => (
                             <View>
-                            <TouchableOpacity onPress={() => navigation.navigate('partypage', { id: item.party_id })}>
-                                <View style={styles.insidegoodsbox} elevation={5}>
-                                    <Image source={{ uri: item.party_picture }} style={styles.goodsimage} />
-                                    <View style={{
-                                        marginLeft: '3%'
-                                    }}>
-                                        <Text numberOfLines={1} style={{
-                                            fontSize: 15,
-                                            width: 200,
-                                            marginTop: '2%',
-                                        }}> {item.party_name} </Text>
+                                <TouchableOpacity onPress={() => navigation.navigate('storepartydetail', { id: item.party_id })}>
+                                    <View style={styles.insidegoodsbox} elevation={5}>
+                                        <Image source={{ uri: item.party_picture }} style={styles.goodsimage} />
                                         <View style={{
-                                            marginTop: '5%'
+                                            marginLeft: '3%'
                                         }}>
-                                            <TouchableOpacity>
-                                                <Button color="#6359d5" style={{ fontSize: 20 }}
-                                                    title="จ่าย">
-                                                </Button>
-                                            </TouchableOpacity>
+                                            <Text numberOfLines={1} style={{
+                                                fontSize: 15,
+                                                width: 200,
+                                                marginTop: '2%',
+                                            }}> {item.party_name} </Text>
+                                            <View style={{
+                                                marginTop: '5%'
+                                            }}>
+                                                <TouchableOpacity>
+                                                    <Button color="#6359d5" style={{ fontSize: 20 }}
+                                                        title="จ่าย">
+                                                    </Button>
+                                                </TouchableOpacity>
+                                            </View>
                                         </View>
-                                    </View>
 
-                                </View>
-                            </TouchableOpacity>
-                        </View>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
                         )}
                     />
                 </View>

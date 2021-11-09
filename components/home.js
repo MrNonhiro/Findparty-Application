@@ -11,7 +11,6 @@ import {
   FlatList,
   SafeAreaView
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Topnavigator from './topnavigator';
 
@@ -21,7 +20,7 @@ export default function Home({ navigation }) {
     // Post updated, do something with route.params.post
     // For example, send the post to the server 
 
-    axios.get('http://34.87.24.98/showparty.php')
+    axios.get('http://34.124.194.224/showparty.php')
       .then(response => {
         setInfo(response.data);
       })
@@ -115,7 +114,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    marginTop: '6%'
+    marginTop: '5%'
   },
   container2: {
     flex: 1,

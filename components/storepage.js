@@ -17,7 +17,7 @@ export default function storepage({ navigation }) {
     // Post updated, do something with route.params.post
     // For example, send the post to the server 
 
-    axios.get('http://34.126.169.148/showparty.php')
+    axios.get('http://34.124.194.224/showparty.php')
       .then(response => {
         setInfo(response.data);
       })
@@ -33,15 +33,15 @@ export default function storepage({ navigation }) {
         leftComponent={
           <View style={{ marginTop: '8%' }}>
             <TouchableOpacity
-              onPress={() => { navigation.navigate('partypage') }}>
+              onPress={() => { navigation.goBack() }}>
               <Image source={require('../images/back.png')} style={{
                 height: 25,
                 width: 25,
-                tintColor: 'black',
+                tintColor: '#6359d5',
               }} />
             </TouchableOpacity>
           </View>}
-        centerComponent={{ text: 'ข้อมูลส่วนตัว', style: { color: 'black', fontSize: 25 } }}
+        centerComponent={{ text: 'Fashion men shop', style: { color: 'black', fontSize: 25 } }}
         containerStyle={{
           backgroundColor: 'white',
           height: '18%',
@@ -62,12 +62,31 @@ export default function storepage({ navigation }) {
             </View>
           </View>
 
+          <View style={{
+            flex: 2,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginTop: '20%'
+          }}>
+            <TouchableOpacity>
+              <View style={{ marginRight: '2.5%' }}>
+                <Text style={{ alignSelf: 'center', color: 'black', fontSize: 50 }}> 0 </Text>
+                <Text style={{ alignSelf: 'center', color: 'black', fontSize: 15 }}> ผู้ติดตาม </Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <View style={{ marginRight: '2.5%' }}>
+                <Text style={{ alignSelf: 'center', color: 'black', fontSize: 50 }}> 0 </Text>
+                <Text style={{ alignSelf: 'center', color: 'black', fontSize: 15 }}> ปาร์ตี้ทั้งหมด </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+
           { // party group
           }
-          <View style={{ flex: 3, marginTop: '15%' }}>
+          <View style={{ flex: 3, marginTop: '10%' }}>
             <View style={styles.container}>
               <FlatList
-                style={{ marginTop: -40 }}
                 data={info}
                 numColumns={2}
                 renderItem={({ item }) => (
@@ -132,7 +151,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '45%',
-    height: '80%',
+    height: '120%',
     borderRadius: 120,
   },
   pomotext: {

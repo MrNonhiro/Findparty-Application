@@ -14,6 +14,7 @@ export default function userpage({ navigation }) {
     const [user_tel, setUsertel] = useState([]);
     const [email, setEmail] = useState([]);
     const [user_profile, setImage] = useState([]);
+    const [party_status, setPartyStatus] = useState([]);
     useEffect(() => {
         AsyncStorage.getItem('user_id')
             .then((value) => {
@@ -21,8 +22,22 @@ export default function userpage({ navigation }) {
 
             })
     })
+
     useEffect(() => {
-        axios.get('http://34.87.24.98/showuser.php', {
+        // Post updated, do something with route.params.post
+        // For example, send the post to the server 
+
+        axios.get('http://34.124.194.224/showparty.php')
+            .then(response => {
+                setInfo(response.data);
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    })
+
+    useEffect(() => {
+        axios.get('http://34.124.194.224/showuser.php', {
             params: {
                 user_id: user_id
             }
@@ -118,6 +133,8 @@ export default function userpage({ navigation }) {
                                     <View style={{ marginTop: '10%', marginRight: '2.5%' }}>
                                         <Image source={require('../../images/waitingpayment.png')} style={styles.statusimage1} />
                                         <View style={styles.badge}>
+                                            {/* data == 0 ? false :  true */}
+                                            
                                             <Text style={styles.badgeText}> 0 </Text>
                                         </View>
                                         <Text style={{ alignSelf: 'center', color: 'black' }}> รอการชำระเงิน </Text>
@@ -242,6 +259,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         right: '5%', top: '-10%'
+        
     },
     badgeText: {
         color: 'white',

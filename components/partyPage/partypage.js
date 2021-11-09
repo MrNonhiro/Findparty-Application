@@ -76,7 +76,7 @@ export default function partydetail({ navigation, route }) {
                             <View style={{ marginTop: '8%' }}>
                                 <TouchableOpacity
                                     onPress={() => { navigation.goBack() }}>
-                                    <Image source={require('../images/back.png')} style={{
+                                    <Image source={require('../../images/back.png')} style={{
                                         height: 25,
                                         width: 25,
                                         tintColor: '#6359d5',
@@ -178,71 +178,69 @@ export default function partydetail({ navigation, route }) {
                                             {item.party_detail}
                                         </Text>
                                     </View>
-                                    <View style={{ flexDirection: 'row', width: '100%', marginTop: '2%' }}>
-                                        <View >
-                                            <TouchableOpacity onPress={() => Alert.alert("กรุณาเข้าสู่ระบบ")}>
-                                                <View style={{
-                                                    backgroundColor: '#6359d5',
-                                                    alignItems: 'center',
-                                                    height: 35,
-                                                    flexDirection: 'row',
-                                                    justifyContent: 'center',
-                                                    marginTop: '3%',
-                                                    width: '80%',
-                                                    alignSelf: 'center',
-                                                    borderRadius: 10
-                                                }}>
-                                                    <Text
-                                                        style={{
-                                                            fontSize: 16,
-                                                            color: 'white',
-                                                            fontWeight: 'bold'
-                                                        }} > เข้าร่วมกลุ่ม </Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                        </View>
-                                        <View>
-                                            <TouchableOpacity onPress={() => navigation.navigate('cmPage')}>
-                                                <View style={{
-                                                    backgroundColor: '#6359d5',
-                                                    alignItems: 'center',
-                                                    height: 35,
-                                                    flexDirection: 'row',
-                                                    justifyContent: 'center',
-                                                    marginTop: '3%',
-                                                    width: '80%',
-                                                    alignSelf: 'center',
-                                                    borderRadius: 10
-                                                }}>
-                                                    <Text
-                                                        style={{
-                                                            fontSize: 16,
-                                                            color: 'white',
-                                                            fontWeight: 'bold'
-                                                        }} > แชทกลุ่ม </Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                        </View>
+                                    <View>
+                                        <TouchableOpacity onPress={() => Alert.alert("กรุณาเข้าสู่ระบบ")}>
+                                            <View style={{
+                                                backgroundColor: '#6359d5',
+                                                alignItems: 'center',
+                                                height: 35,
+                                                flexDirection: 'row',
+                                                justifyContent: 'center',
+                                                marginTop: '3%',
+                                                width: '90%',
+                                                alignSelf: 'center',
+                                                borderRadius: 10
+                                            }}>
+                                                <Text
+                                                    style={{
+                                                        fontSize: 16,
+                                                        color: 'white',
+                                                        marginRight: '3%',
+                                                        fontWeight: 'bold'
+                                                    }} > เข้าร่วมกลุ่ม </Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View>
+                                        <TouchableOpacity onPress={() => Alert.alert("กรุณาเข้าสู่ระบบ")}>
+                                            <View style={{
+                                                backgroundColor: '#6359d5',
+                                                alignItems: 'center',
+                                                height: 35,
+                                                flexDirection: 'row',
+                                                justifyContent: 'center',
+                                                marginTop: '3%',
+                                                width: '90%',
+                                                alignSelf: 'center',
+                                                borderRadius: 10
+                                            }}>
+                                                <Text
+                                                    style={{
+                                                        fontSize: 16,
+                                                        color: 'white',
+                                                        marginRight: '3%',
+                                                        fontWeight: 'bold'
+                                                    }} > แชท </Text>      
+                                            </View>
+                                        </TouchableOpacity>
                                     </View>
                                     <View style={{ alignItems: 'center' }}>
                                         <Text style={{ fontSize: 16, color: '#6359d5', fontWeight: 'bold', alignSelf: 'center' }}> ------------------------------------------------------------- </Text>
                                     </View>
-                                    <View>
-                                        <View style={{ flexDirection: 'row', marginTop: '3%' }}>
-                                            <Text style={{ fontSize: 16, fontWeight: 'bold' }}> สร้างกลุ่มโดย </Text>
-                                        </View>
-                                        <TouchableOpacity onPress={() => navigation.navigate('storepage', { id: item.store_id })}>
-                                            <View style={{ flexDirection: 'row', marginTop: '2%' }}>
-                                                <Image source={require('../images/shirt1.jpg')} style={styles.storelogo} />
-                                                <Text
-                                                    style={{
-                                                        fontSize: 18,
-                                                        textAlign: 'center',
-                                                        paddingTop: '2%'
-                                                    }}> {item.party_store} </Text>
-                                            </View>
-                                        </TouchableOpacity>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <Text style={{ fontSize: 16, fontWeight: 'bold' }}> สร้างกลุ่มโดย </Text>
                                     </View>
+                                    <TouchableOpacity onPress={() => navigation.navigate('storepage', { id: item.store_id })}>
+                                        <View style={{ flexDirection: 'row', marginTop: '2%' }}>
+                                            <Image source={require('../../images/shirt1.jpg')} style={styles.storelogo} />
+                                            <Text
+                                                style={{
+                                                    fontSize: 18,
+                                                    textAlign: 'center',
+                                                    paddingTop: '2%'
+                                                }}> {item.party_store} </Text>
+                                        </View>
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         )}

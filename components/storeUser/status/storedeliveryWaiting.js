@@ -4,7 +4,7 @@ import { Header } from 'react-native-elements'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function paymentWating({ navigation }) {
+export default function storedeliveryWaiting({ navigation }) {
 
     const [info, setInfo] = useState([]);
     useEffect(() => {
@@ -34,7 +34,7 @@ export default function paymentWating({ navigation }) {
                             }} />
                         </TouchableOpacity>
                     </View>}
-                centerComponent={{ text: 'รอการชำระ', style: { color: 'black', fontSize: 25 } }}
+                centerComponent={{ text: 'รอการจัดส่ง', style: { color: 'black', fontSize: 25 } }}
                 containerStyle={{
                     backgroundColor: 'white',
                     height: '18%',
@@ -50,7 +50,7 @@ export default function paymentWating({ navigation }) {
                         numColumns={1}
                         renderItem={({ item }) => (
                             <View>
-                            <TouchableOpacity onPress={() => navigation.navigate('partypage', { id: item.party_id })}>
+                            <TouchableOpacity onPress={() => navigation.navigate('storepartydetail', { id: item.party_id })}>
                                 <View style={styles.insidegoodsbox} elevation={5}>
                                     <Image source={{ uri: item.party_picture }} style={styles.goodsimage} />
                                     <View style={{

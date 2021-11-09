@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Image, ImageBackground, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Image,
+  ImageBackground,
+  TouchableOpacity
+} from 'react-native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function loginpage({ navigation }) {
-  const [email, setuser_Email] = useState("");
+  const [username, setuser_Username] = useState("");
   const [password, setuser_Password] = useState("");
   const [googleSubmitting, setGoogleSubmitting] = useState("");
+  const [hidePass, setHidePass] = useState("");
 
   let [isSubmit, setIsSubmit] = useState(false);
 
@@ -13,15 +24,17 @@ export default function loginpage({ navigation }) {
     const authenticate = async () => {
       axios
         .post(
-          "http://34.126.169.148/login.php",
+          "http://34.124.194.224/login.php",
           JSON.stringify({
-            user_email: email,
-            user_password: password,
+            password: password,
+            username: username
           })
         )
         .then((response) => {
-          if (response.data == "true") {
+          if (response.data.onLogin == "true") {
             navigation.navigate("userpage");
+            AsyncStorage.setItem('user_id', response.data.user_id)
+            alert(response.data.user_id)
             setIsSubmit(false)
           } else {
             alert(JSON.stringify(response.data));
@@ -37,39 +50,45 @@ export default function loginpage({ navigation }) {
     if (isSubmit) authenticate();
   }, [isSubmit]);
 
-  const usernameHandler = (text) => {
-    setuser_Email(text);
-
-  };
-
   return (
     <View style={styles.container}>
-      <ImageBackground source={require('../images/loginregiswall.png')} style={styles.image}>
         <View style={styles.headbox}>
-          <Text style={styles.text2}> ลงชื่อเข้าใช้ </Text>
-          <Text style={styles.text}> | </Text>
-          <Text style={styles.text} onPress={() => navigation.navigate('register')}> สมัครสมาชิก </Text>
+          <Text style={styles.text2}> เข้าสู่ระบบร้านค้า </Text>
         </View>
         <View style={styles.inputbox}>
-          <View style={styles.searchbar}>
-            <Image source={require('../images/userpage.png')} style={styles.userimage} />
-            <TextInput style={styles.placeholder} placeholder="Username" onChangeText={usernameHandler} />
+          <View style={styles.detailView}>
+            <Image source={require('../images/user.png')} style={styles.userimage} />
+            <TextInput
+              onChangeText={(text) => setuser_Username(text)} style={styles.placeholder}
+              placeholder="ชื่อผู้ใช้"
+            />
           </View>
-          <View style={styles.searchbar}>
+          <View style={styles.detailView}>
             <Image source={require('../images/password.png')} style={styles.userimage} />
-            <TextInput style={styles.placeholder} placeholder="Password" keyboardType='numberic' onChangeText={(text) => setuser_Password(text)} />
+            <TextInput
+              onChangeText={(text) => setuser_Password(text)} style={styles.placeholder}
+              placeholder="รหัสผ่าน"
+              secureTextEntry={hidePass ? true : false}
+            />
+            <Icon
+              style={{
+                padding: 5
+              }}
+              name={hidePass ? 'eye-slash' : 'eye'}
+              size={15}
+              color="grey"
+              onPress={() => setHidePass(!hidePass)}
+            />
           </View>
-          <View style={styles.buttombox}>
-            <Text style={{ alignSelf: 'center', alignSelf: 'flex-end', marginRight: '10%', marginTop: '2%' }}> ลืมรหัสผ่าน? </Text>
-          </View>
-          <View style={styles.submit}>
-            <TouchableOpacity onPress={() => setIsSubmit(true)} style={styles.submittext}><Text> เข้าสู่ระบบ </Text></TouchableOpacity>
-          </View>
+          <TouchableOpacity onPress={() => setIsSubmit(true)}>
+            <View style={styles.submit}>
+              <Text style={styles.submittext}> เข้าสู่ระบบ </Text>
+            </View>
+          </TouchableOpacity>
           <View style={styles.submit2}>
             <Text style={styles.submittext2} onPress={() => navigation.goBack()}> ยกเลิก </Text>
           </View>
         </View>
-      </ImageBackground>
     </View>
   )
 }
@@ -77,7 +96,8 @@ export default function loginpage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column"
+    flexDirection: "column",
+    marginTop: '40%'
   },
   image: {
     flex: 1,
@@ -87,7 +107,6 @@ const styles = StyleSheet.create({
   headbox: {
     flexDirection: 'row',
     alignSelf: 'center',
-
   },
   text: {
     fontSize: 20,
@@ -97,10 +116,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'black',
     fontWeight: 'bold',
-    color: 'green'
+    color: 'black'
   },
   inputbox: {
-    padding: 10
+    alignItems: 'center',
+    marginTop: '8%'
   },
   searchbar: {
     height: '8%',
@@ -118,19 +138,26 @@ const styles = StyleSheet.create({
     marginLeft: 15
   },
   userimage: {
-    height: '5%',
-    width: '11%',
-    paddingTop: '11%'
+    height: '43%',
+    width: '5.5%',
+    marginLeft: '5%',
+    marginRight: '0.5%',
+    tintColor: '#6359d5'
   },
   buttombox: {
+    marginTop: '3%',
+    marginLeft: '55%'
+  },
+  buttombox2: {
   },
   submit: {
     alignSelf: 'center',
-    backgroundColor: 'green',
+    backgroundColor: '#6359d5',
     borderRadius: 25,
     borderWidth: 10,
-    borderColor: 'green',
-    marginTop: '20%'
+    borderColor: '#6359d5',
+    marginTop: '20%',
+    elevation: 3,
   },
   submittext: {
     fontSize: 25,
@@ -144,27 +171,37 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     borderLeftWidth: 29,
     borderRightWidth: 29,
-    marginTop: '2%'
+    marginTop: '2%',
+    elevation: 3,
   },
   submittext2: {
     fontSize: 25,
     color: 'white',
   },
   loginvia: {
-    flex: 2,
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: '37%'
   },
   loginimage: {
     marginTop: '1%',
-    height: '145%',
-    width: '20%'
+    height: 90,
+    width: 50
   },
   loginimage2: {
     marginTop: '1%',
-    height: '75%',
-    width: '19%'
-  }
+    height: 50,
+    width: 50
+  },
+  detailView: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    height: 50,
+    width: '85%',
+    marginTop: '1%',
+    alignItems: 'center',
+    elevation: 3,
+    borderRadius: 30,
+    marginTop: '3%',
+  },
 })
   ;
