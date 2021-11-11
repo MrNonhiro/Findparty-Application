@@ -13,8 +13,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function loginpage({ navigation }) {
-  const [username, setuser_Username] = useState("");
-  const [password, setuser_Password] = useState("");
+  const [username, setstore_Username] = useState("");
+  const [password, setstore_Password] = useState("");
   const [googleSubmitting, setGoogleSubmitting] = useState("");
   const [hidePass, setHidePass] = useState("");
 
@@ -24,7 +24,7 @@ export default function loginpage({ navigation }) {
     const authenticate = async () => {
       axios
         .post(
-          "http://34.124.194.224/login.php",
+          "http://34.124.194.224/store_login.php",
           JSON.stringify({
             password: password,
             username: username
@@ -32,8 +32,8 @@ export default function loginpage({ navigation }) {
         )
         .then((response) => {
           if (response.data.onLogin == "true") {
-            navigation.navigate("userpage");
-            AsyncStorage.setItem('user_id', response.data.user_id)
+            navigation.navigate("homepage");
+            AsyncStorage.setItem('store_id', response.data.user_id)
             alert(response.data.user_id)
             setIsSubmit(false)
           } else {
@@ -59,14 +59,14 @@ export default function loginpage({ navigation }) {
           <View style={styles.detailView}>
             <Image source={require('../images/user.png')} style={styles.userimage} />
             <TextInput
-              onChangeText={(text) => setuser_Username(text)} style={styles.placeholder}
+              onChangeText={(text) => setstore_Username(text)} style={styles.placeholder}
               placeholder="ชื่อผู้ใช้"
             />
           </View>
           <View style={styles.detailView}>
             <Image source={require('../images/password.png')} style={styles.userimage} />
             <TextInput
-              onChangeText={(text) => setuser_Password(text)} style={styles.placeholder}
+              onChangeText={(text) => setstore_Password(text)} style={styles.placeholder}
               placeholder="รหัสผ่าน"
               secureTextEntry={hidePass ? true : false}
             />

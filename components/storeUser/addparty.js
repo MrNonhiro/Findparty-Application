@@ -18,26 +18,41 @@ import axios from 'axios';
 import * as FileSystem from 'expo-file-system';
 
 export default function usersetting({ navigation }) {
+    const [party_name, setPartyname] = useState('');
+    const [party_type, setPartytype] = useState('');
+    const [party_date, setPartydate] = useState('');
+    const [party_detail, setPartyndetail] = useState('');
+    const [party_price, setPartyprice] = useState('');
+    const [party_limitmember, setPartylimitmember] = useState('');
+    const [party_goodspictures, setPartygoodspictures] = useState('');
+    const [submit, setSubmit] = useState(false);
+
     const [pickedImagePath, setPickedImagePath] = useState('');
-    const showImagePicker = async () => {
-        // Ask the user for the permission to access the media library 
-        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    useEffect(() => {
+        (async () => {
+            if (Platform.OS !== 'web') {
+                const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                if (status !== 'granted') {
+                    alert('Sorry, we need camera roll permissions to make this work!');
+                }
+            }
+        })();
+    }, []);
 
-        if (permissionResult.granted === false) {
-            alert("You've refused to allow this appp to access your photos!");
-            return;
-        }
-
-        const result = await ImagePicker.launchImageLibraryAsync();
-
-        // Explore the result
-        console.log(result);
-
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+        const base64 = await FileSystem.readAsStringAsync(result.uri, { encoding: 'base64' });
+        console.log(base64);
+        const base = 'data:image/jpeg;base64,'
         if (!result.cancelled) {
-            setPickedImagePath(result.uri);
-            console.log(result.uri);
+            setPickedImagePath(base + base64);
         }
-    }
+    };
 
     const openCamera = async () => {
         // Ask the user for the permission to access the camera
@@ -58,6 +73,7 @@ export default function usersetting({ navigation }) {
             console.log(result.uri);
         }
     }
+    // Ask the user for the permission to access the media library 
 
     {/* let [fontsLoaded] = useFonts({
         'Inter-SemiBoldItalic': 'https://rsms.me/inter/font-files/Inter-SemiBoldItalic.otf?v=3.12',
@@ -69,38 +85,38 @@ export default function usersetting({ navigation }) {
     }
     */}
 
-    const [info, setInfo] = useState([]);
     useEffect(() => {
-        // Post updated, do something with route.params.post
-        // For example, send the post to the server 
+        const authenticate = async () => {
+            axios
+                .post(
+                    "http://34.124.194.224/create_party.php",
+                    JSON.stringify({
+                        party_name: party_name,
+                        party_type: party_type,
+                        party_date: party_date,
+                        party_detail: party_detail,
+                        party_price: party_price,
+                        party_limitmember: party_limitmember,
+                        party_storeId: party_storeId
+                    })
+                )
+                .then((response) => {
+                    setSubmit(false)
+                    alert(response.data);
+                })
+                .catch((err) => {
+                    setSubmit(false)
+                    alert(err);
+                });
+        };
+        if (submit) authenticate();
+    }, [submit]);
 
-        axios.get('http://34.124.194.224/showuser.php', {
-            params: {
-                user_id: user_id
-            }
-        })
-            .then(response => {
-                setInfo(response.data);
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }, [info])
+    console.log(submit)
 
-    useEffect(() => {
-        // Post updated, do something with route.params.post
-        // For example, send the post to the server 
-
-        AsyncStorage.getItem('user_id')
-            .then(response => {
-                setUser_id(response);
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    })
-
-    const [user_id, setUser_id] = useState([]);
+    const partynameHandler = (text) => {
+        setPartyname(text);
+    }
 
     const [currentDate, setCurrentDate] = useState('');
     useEffect(() => {
@@ -111,8 +127,7 @@ export default function usersetting({ navigation }) {
         var min = new Date().getMinutes(); //Current Minutes
         var sec = new Date().getSeconds(); //Current Seconds
         setCurrentDate(
-            date + '/' + month + '/' + year
-            + ' ' + hours + ':' + min + ':' + sec
+            year + '-' + month + '-' + date
         );
     }, []);
 
@@ -139,7 +154,7 @@ export default function usersetting({ navigation }) {
                 }}
                 rightComponent={
                     <View style={{ marginTop: '4%' }}>
-                        <TouchableOpacity onPress={() => { navigation.navigate('userpage') }}>
+                        <TouchableOpacity onPress={() => setSubmit(true)}>
                             <Text style={{
                                 color: '#6359d5',
                                 fontSize: 20
@@ -148,6 +163,7 @@ export default function usersetting({ navigation }) {
                     </View>
                 }
             />
+
             <View style={{
                 flex: 1,
                 width: '100%',
@@ -155,133 +171,134 @@ export default function usersetting({ navigation }) {
                 alignSelf: 'center',
                 marginBottom: '8%'
             }}>
-                <View style={styles.profileImageBox}>
-                    {
-                        pickedImagePath !== '' && <Image
-                            source={{ uri: pickedImagePath }}
-                            style={styles.profileimage}
-                        />
-                    }
-                    <View style={{ flexDirection: 'row' }}>
-                        <View style={{ flexDirection: 'row', marginTop: 15 }}>
-                            <TouchableOpacity onPress={showImagePicker}>
-                                <View style={{
-                                    backgroundColor: '#6359d5',
-                                    height: 40,
-                                    width: 120,
-                                    flexDirection: 'row',
-                                    justifyContent: 'center',
-                                    borderRadius: 15
-                                }}>
-                                    <Image source={require('../../images/gallery.png')} style={{ height: 25, width: 25, marginTop: 8 }} />
-                                    <Text style={{
-                                        fontSize: 20,
-                                        color: 'white',
-                                        alignSelf: 'center'
-                                    }}> แกลลอรี่ </Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
+                <ScrollView style={{ width: '100%' }}>
+                    <View style={styles.profileImageBox}>
+                        {
+                            pickedImagePath !== '' && <Image
+                                source={{ uri: pickedImagePath }}
+                                style={styles.profileimage}
+                            />
+                        }
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'row', marginTop: 15 }}>
+                                <TouchableOpacity onPress={pickImage}>
+                                    <View style={{
+                                        backgroundColor: '#6359d5',
+                                        height: 40,
+                                        width: 120,
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        borderRadius: 15
+                                    }}>
+                                        <Image source={require('../../images/gallery.png')} style={{ height: 25, width: 25, marginTop: 8 }} />
+                                        <Text style={{
+                                            fontSize: 20,
+                                            color: 'white',
+                                            alignSelf: 'center'
+                                        }}> แกลลอรี่ </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
 
-                        <View style={{ flexDirection: 'row', marginTop: 15, marginLeft: 10 }}>
-                            <TouchableOpacity onPress={openCamera}>
-                                <View style={{
-                                    backgroundColor: '#6359d5',
-                                    height: 40,
-                                    width: 100,
-                                    flexDirection: 'row',
-                                    justifyContent: 'center',
-                                    borderRadius: 15
-                                }}>
-                                    <Image source={require('../../images/camera.png')} style={{ height: 25, width: 25, marginTop: 8 }} />
-                                    <Text style={{
-                                        fontSize: 20,
-                                        color: 'white',
-                                        alignSelf: 'center'
-                                    }}> กล้อง </Text>
-                                </View>
-                            </TouchableOpacity>
+                            <View style={{ flexDirection: 'row', marginTop: 15, marginLeft: 10 }}>
+                                <TouchableOpacity onPress={openCamera}>
+                                    <View style={{
+                                        backgroundColor: '#6359d5',
+                                        height: 40,
+                                        width: 100,
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        borderRadius: 15
+                                    }}>
+                                        <Image source={require('../../images/camera.png')} style={{ height: 25, width: 25, marginTop: 8 }} />
+                                        <Text style={{
+                                            fontSize: 20,
+                                            color: 'white',
+                                            alignSelf: 'center'
+                                        }}> กล้อง </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
-                </View>
-                <View style={{ flex: 1, width: '100%', marginTop: '6%' }}>
-                    {/* flatlist */}
-                    <View>
+                    <View style={{ flex: 1, width: '100%', height: 600 }}>
+                        {/* flatlist */}
                         <View style={{
-                            height: 20,
-                            marginTop: '20%',
-                            marginBottom: 10,
-                            alignSelf: 'flex-start'
+                            height: '300%'
                         }}>
-                            <Text style={{
-                                fontSize: 20,
-                                color: 'black',
-
-                            }}> ข้อมูลปาร์ตี้ </Text>
-                        </View>
-                        <View style={styles.detailView}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="ชื่อปาร์ตี้"
-                            />
-                        </View>
-                        <View style={styles.detailView}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="ประเภท"
-                                keyboardType="numeric"
-                            />
-                        </View>
-                        <View style={styles.detailView}>
-                            <Text style={styles.input}> เวลาที่จัดตั้งกลุ่ม </Text>
-                            <Text style={styles.input}> {currentDate} </Text>
-                        </View>
-                        <View style={styles.detailView}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="ราคาหารต่อคน"
-                            />
-                        </View>
-                        <View style={styles.detailView}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="จำนวนสมาชิกกลุ่ม"
-                            />
-                        </View>
-                        <View style={styles.detailView}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="รายละเอียด"
-                            />
-                        </View>
-                        <TouchableOpacity onPress={() => navigation.navigate('nologinpage', AsyncStorage.removeItem('user_id'))}>
                             <View style={{
-                                backgroundColor: 'red',
-                                alignItems: 'center',
-                                height: 35,
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                                marginTop: '5%',
-                                width: '90%',
-                                alignSelf: 'center',
-                                borderRadius: 10
+                                height: 20,
+                                marginTop: '10%',
+                                marginBottom: 10,
+                                alignSelf: 'flex-start',
+                                width: '100%'
                             }}>
                                 <Text style={{
-                                    fontSize: 16,
-                                    color: 'white',
-                                    marginRight: '3%',
-                                    fontWeight: 'bold'
-                                }}> ออกจากระบบ </Text>
+                                    fontSize: 20,
+                                    color: 'black',
+
+                                }}> ข้อมูลปาร์ตี้ </Text>
                             </View>
-                        </TouchableOpacity>
+                            <View style={styles.detailView}>
+                                <Text> ชื่อปาร์ตี้ </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="ชื่อปาร์ตี้"
+                                    onChangeText={partynameHandler}
+                                />
+                            </View>
+                            <View style={styles.detailView}>
+                                <Text> ประเภท </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="ประเภท"
+                                    onChangeText={(text) => setPartytype(text)}
+                                />
+                            </View>
+                            <View style={styles.detailView}>
+                                <Text> เวลาที่จัดตั้งกลุ่ม </Text>
+                                <Text style={styles.input} onChangeText={(text) => setPartydate(text)}> {currentDate} </Text>
+                            </View>
+                            <View style={styles.detailView}>
+                                <Text> ราคาหารต่อคน </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="ราคาหารต่อคน"
+                                    onChangeText={(text) => setPartyprice(text)}
+                                />
+                            </View>
+                            <View style={styles.detailView}>
+                                <Text> จำนวนสมาชิกกลุ่ม </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="จำนวนสมาชิกกลุ่ม"
+                                    onChangeText={(text) => setPartylimitmember(text)}
+                                />
+                            </View>
+                            <View style={{
+                                flexDirection: 'row',
+                                backgroundColor: 'white',
+                                height: 80,
+                                width: '100%',
+                                marginTop: '1%',
+                                alignItems: 'center',
+                                elevation: 3
+                            }}>
+                                <Text> รายละเอียด </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="รายละเอียด"
+                                    onChangeText={(text) => setPartyndetail(text)}
+                                />
+                            </View>
+                        </View>
+
+
+
                     </View>
 
-
-
-                </View>
-
-                {/* when click this, it will insert data into user table */}
-                {/* <TouchableOpacity onPress={() => navigation.navigate('userpage')}>
+                    {/* when click this, it will insert data into user table */}
+                    {/* <TouchableOpacity onPress={() => navigation.navigate('userpage')}>
                         <View style={{
                             marginTop: '6%',
                             elevation: 10
@@ -293,6 +310,7 @@ export default function usersetting({ navigation }) {
                             }} />
                         </View>
                         </TouchableOpacity> */}
+                </ScrollView>
             </View>
         </View >
 

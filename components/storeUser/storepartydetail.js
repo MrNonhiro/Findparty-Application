@@ -14,18 +14,21 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 export default function partydetail({ navigation, route }) {
     const [info, setInfo] = useState([]);
+    const [userjoin, setUserjoin] = useState([]);
+
     const { id } = route.params;
     useEffect(() => {
         // Post updated, do something with route.params.post
         // For example, send the post to the server 
 
-        axios.get('http:/34.124.194.224/showsingle.php', {
+        axios.get('http://34.124.194.224/showsingle.php', {
             params: {
                 id: id
             }
         })
             .then(response => {
                 setInfo(response.data);
+                setUserjoin(response.data.userjoin);
             })
             .catch(err => {
                 console.log(err)
@@ -57,14 +60,6 @@ export default function partydetail({ navigation, route }) {
         }
     }
 
-    const path = ['01.jpg', '02.jpg', '03.jpg'];
-    const images = info.map(item => (
-        item.party_goodspictures
-    ))
-
-    const showpath = path.map(item => (
-        images + item
-    ))
 
     return (
         <View style={styles.container}>
@@ -171,7 +166,7 @@ export default function partydetail({ navigation, route }) {
                                     </View>
                                     <View style={{ flexDirection: 'row', marginTop: '5%' }}>
                                         <Text style={{ fontSize: 16, color: 'black' }}> จำนวนสมาชิกกลุ่ม </Text>
-                                        <Text style={{ color: 'red', fontSize: 16, marginLeft: '5%', fontWeight: 'bold' }}> {item.party_member} </Text>
+                                        <Text style={{ color: 'red', fontSize: 16, marginLeft: '5%', fontWeight: 'bold' }}> {userjoin} </Text>
                                         <Text style={{ fontSize: 16, color: 'black' }}> / </Text>
                                         <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}> {item.party_limitmember} </Text>
                                         <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}> คน </Text>

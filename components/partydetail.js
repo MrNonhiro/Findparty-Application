@@ -12,9 +12,13 @@ import {
 import axios from 'axios';
 import { Header } from 'react-native-elements'
 import { ScrollView } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function partydetail({ navigation, route }) {
+    const [user_id, setUser_id] = useState([]);
     const [info, setInfo] = useState([]);
+    const [userdata, setUserdata] = useState([]);
+    const [buttonStatus, setButtonStatus] = useState([]);
     const { id } = route.params;
     useEffect(() => {
         // Post updated, do something with route.params.post
@@ -32,6 +36,64 @@ export default function partydetail({ navigation, route }) {
                 console.log(err)
             })
     })
+
+    useEffect(() => {
+        // Post updated, do something with route.params.post
+        // For example, send the post to the server 
+
+        axios.get('http:/34.124.194.224/party_button_status_for_user.php', {
+            params: {
+                p_id: id,
+                u_id: id
+            }
+        })
+            .then(response => {
+                setButtonStatus(response.data.status);
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    })
+
+    useEffect(() => {
+        AsyncStorage.getItem('user_id')
+            .then((value) => {
+                setUser_id(value);
+
+            })
+    })
+
+    useEffect(() => {
+        axios.get('http://34.124.194.224/profile_getdata_for_user.php', {
+            params: {
+                user_id: user_id
+            }
+        })
+            .then(response => {
+                setUserdata(response.data.all);
+                setUsername(response.data.username)
+                setUsedisplay(response.data.userdisplay)
+                setUsertel(response.data.user_tel)
+                setEmail(response.data.email)
+                setImage(response.data.user_profile)
+
+                setFollow(response.data.data.profiledata.follow)
+                setJoinAll(response.data.data.profiledata.alljoined)
+                setOnPayment(response.data.data.partystatus.onpayment)
+                setonSending(response.data.data.partystatus.onsending)
+                setonRecieve(response.data.data.partystatus.onrecieve)
+                setonSuccessfully(response.data.data.partystatus.successfully)
+
+
+
+            })
+            .catch(err => {
+                console.log(err)
+            })
+
+    }, [userdata])
+    console.log(userdata)
+
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const scrollX = useRef(new Animated.Value(0)).current;
@@ -58,14 +120,6 @@ export default function partydetail({ navigation, route }) {
         }
     }
 
-    const path = ['01.jpg', '02.jpg', '03.jpg'];
-    const images = info.map(item => (
-        item.party_goodspictures
-    ))
-
-    const showpath = path.map(item => (
-        images + item
-    ))
 
     return (
         <View style={styles.container}>
@@ -92,8 +146,8 @@ export default function partydetail({ navigation, route }) {
                         }}
                     />
                 </View>
-                {/*
-                <View style={styles.imagebox}>
+                
+                {/* <View style={styles.imagebox}>
                     <View style={{
                         justifyContent: 'center',
                         width: '100%',
@@ -133,8 +187,8 @@ export default function partydetail({ navigation, route }) {
                             viewabilityConfig={viewConfig}
                             ref={dataRef}
                         />
-                    </View>
-                            */}
+                    </View> */}
+                            
                 <View style={styles.detailbox}>
                     <FlatList
                         style={{ marginTop: -40 }}
@@ -160,7 +214,7 @@ export default function partydetail({ navigation, route }) {
                                     </View>
                                     <View style={{ flexDirection: 'row', marginTop: '5%' }}>
                                         <Text style={{ fontSize: 16, color: 'black' }}> จำนวนสมาชิกกลุ่ม </Text>
-                                        <Text style={{ color: 'red', fontSize: 16, marginLeft: '5%', fontWeight: 'bold' }}> {item.party_member} </Text>
+                                        <Text style={{ color: 'red', fontSize: 16, marginLeft: '5%', fontWeight: 'bold' }}> {item.userjoin} </Text>
                                         <Text style={{ fontSize: 16, color: 'black' }}> / </Text>
                                         <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}> {item.party_limitmember} </Text>
                                         <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}> คน </Text>
@@ -180,26 +234,70 @@ export default function partydetail({ navigation, route }) {
                                     </View>
                                     <View style={{ flexDirection: 'row', width: '100%', marginTop: '2%' }}>
                                         <View >
-                                            <TouchableOpacity onPress={() => Alert.alert("กรุณาเข้าสู่ระบบ")}>
-                                                <View style={{
-                                                    backgroundColor: '#6359d5',
-                                                    alignItems: 'center',
-                                                    height: 35,
-                                                    flexDirection: 'row',
-                                                    justifyContent: 'center',
-                                                    marginTop: '3%',
-                                                    width: '80%',
-                                                    alignSelf: 'center',
-                                                    borderRadius: 10
-                                                }}>
-                                                    <Text
-                                                        style={{
-                                                            fontSize: 16,
-                                                            color: 'white',
-                                                            fontWeight: 'bold'
-                                                        }} > เข้าร่วมกลุ่ม </Text>
-                                                </View>
-                                            </TouchableOpacity>
+                                            {buttonStatus == '0' ? (
+                                                <TouchableOpacity onPress={() => Alert.alert("กรุณาเข้าสู่ระบบ")}>
+                                                    <View style={{
+                                                        backgroundColor: 'red',
+                                                        alignItems: 'center',
+                                                        height: 35,
+                                                        flexDirection: 'row',
+                                                        justifyContent: 'center',
+                                                        marginTop: '3%',
+                                                        width: '80%',
+                                                        alignSelf: 'center',
+                                                        borderRadius: 10
+                                                    }}>
+                                                        <Text
+                                                            style={{
+                                                                fontSize: 16,
+                                                                color: 'white',
+                                                                fontWeight: 'bold'
+                                                            }} > ออกจากกลุ่ม </Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            ) : buttonStatus == '1' ? (
+                                                <TouchableOpacity onPress={() => Alert.alert("กรุณาเข้าสู่ระบบ")}>
+                                                    <View style={{
+                                                        backgroundColor: 'gray',
+                                                        alignItems: 'center',
+                                                        height: 35,
+                                                        flexDirection: 'row',
+                                                        justifyContent: 'center',
+                                                        marginTop: '3%',
+                                                        width: '80%',
+                                                        alignSelf: 'center',
+                                                        borderRadius: 10
+                                                    }}>
+                                                        <Text
+                                                            style={{
+                                                                fontSize: 16,
+                                                                color: 'white',
+                                                                fontWeight: 'bold'
+                                                            }} > กลุ่มเต็มแล้ว </Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            ) : (
+                                                <TouchableOpacity onPress={() => Alert.alert("กรุณาเข้าสู่ระบบ")}>
+                                                    <View style={{
+                                                        backgroundColor: '#6359d5',
+                                                        alignItems: 'center',
+                                                        height: 35,
+                                                        flexDirection: 'row',
+                                                        justifyContent: 'center',
+                                                        marginTop: '3%',
+                                                        width: '80%',
+                                                        alignSelf: 'center',
+                                                        borderRadius: 10
+                                                    }}>
+                                                        <Text
+                                                            style={{
+                                                                fontSize: 16,
+                                                                color: 'white',
+                                                                fontWeight: 'bold'
+                                                            }} > เข้าร่วมกลุ่ม </Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            )}
                                         </View>
                                         <View>
                                             <TouchableOpacity onPress={() => navigation.navigate('cmPage')}>

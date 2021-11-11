@@ -86,13 +86,6 @@ export default function loginpage({ navigation }) {
             <Text style={{
             }} onPress={() => navigation.navigate('storelogin')}> เข้าสู่ระบบร้านค้า </Text>
           </View>
-          <View style={styles.buttombox2}>
-            <Text style={{ alignSelf: 'center', marginTop: '5%' }}> เข้าสู่ระบบโดย </Text>
-          </View>
-          <View style={styles.loginvia}>
-            <Image source={require('../images/facebook.png')} style={styles.loginimage} />
-            <Image source={require('../images/google.png')} style={styles.loginimage2} />
-          </View>
           <TouchableOpacity onPress={() => setIsSubmit(true)}>
             <View style={styles.submit}>
               <Text style={styles.submittext}> เข้าสู่ระบบ </Text>

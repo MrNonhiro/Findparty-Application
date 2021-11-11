@@ -10,26 +10,78 @@ import {
 } from 'react-native';
 import { Header } from 'react-native-elements';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function storepage({ navigation }) {
-  const [info, setInfo] = useState([]);
-  useEffect(() => {
-    // Post updated, do something with route.params.post
-    // For example, send the post to the server 
+  const [store_id, setStore_id] = useState([]);
+  const [storedata, setStoredata] = useState([]);
+  const [store_name, setUsedisplay] = useState([]);
+  const [store_email, setEmail] = useState([]);
+  const [store_profile, setImage] = useState([]);
+  const [store_commercial, setCommercial] = useState([]);
 
-    axios.get('http://34.124.194.224/showparty.php')
+  const [follow, setFollow] = useState([]);
+  const [joinAll, setJoinAll] = useState([]);
+  const [onPayment, setOnPayment] = useState([]);
+  const [onSending, setonSending] = useState([]);
+  const [onRecieve, setonRecieve] = useState([]);
+  const [onSuccessfully, setonSuccessfully] = useState([]);
+
+  const [partyThisStore, setPartyThisStore] = useState([]);
+
+
+
+  useEffect(() => {
+    AsyncStorage.getItem('store_id')
+      .then((value) => {
+        setStore_id(value);
+
+      })
+  })
+  useEffect(() => {
+    axios.get('http://34.124.194.224/profile_getdata_for_store.php', {
+      params: {
+        store_id: 1
+      }
+    })
       .then(response => {
-        setInfo(response.data);
+        setStoredata(response.data.all);
+        setUsedisplay(response.data.all.store_name)
+        setImage(response.data.all.store_profile)
+        setFollow(response.data.data.profiledata.allfollow)
+        setJoinAll(response.data.data.profiledata.allparty)
+        setOnPayment(response.data.data.partystatus.onpayment)
+        setonSending(response.data.data.partystatus.onsending)
+        setonRecieve(response.data.data.partystatus.onrecieve)
+        setonSuccessfully(response.data.data.partystatus.successfully)
+
+        setPartyThisStore(response.data.partyThisStore)
+
+
+
       })
       .catch(err => {
         console.log(err)
       })
-  })
+
+  }, [storedata])
+  console.log(store_name)
 
 
   return (
     <View style={styles.container}>
       <Header
+        leftComponent={
+          <View style={{ marginTop: '4%' }}>
+            <TouchableOpacity onPress={() => navigation.navigate('addparty')}>
+              <Image source={require('../../images/add.png')} style={{
+                height: 25,
+                width: 25,
+                tintColor: 'black',
+              }} />
+            </TouchableOpacity>
+          </View>
+        }
         centerComponent={{ text: 'Fashion men shop', style: { color: 'black', fontSize: 25 } }}
         containerStyle={{
           backgroundColor: 'white',
@@ -39,7 +91,7 @@ export default function storepage({ navigation }) {
         }}
         rightComponent={
           <View style={{ marginTop: '4%' }}>
-            <TouchableOpacity onPress={() => { setIsSubmit(true) }}>
+            <TouchableOpacity onPress={() => navigation.navigate('storeSetting')}>
               <Image source={require('../../images/setting.png')} style={{
                 height: 25,
                 width: 25,
@@ -57,8 +109,8 @@ export default function storepage({ navigation }) {
             height: '13%'
           }}>
             <View style={styles.box2}>
-              <Image source={require('../../images/shirt1.jpg')} style={styles.image} />
-              <Text style={styles.text2}> Fashion men shop </Text>
+              <Image source={require('../../images/setting.png')} style={styles.image} />
+              <Text style={styles.text2}> {store_name} </Text>
             </View>
           </View>
 
@@ -70,13 +122,13 @@ export default function storepage({ navigation }) {
           }}>
             <TouchableOpacity>
               <View style={{ marginRight: '2.5%' }}>
-                <Text style={{ alignSelf: 'center', color: 'black', fontSize: 50 }}> 0 </Text>
+                <Text style={{ alignSelf: 'center', color: 'black', fontSize: 50 }}> {follow} </Text>
                 <Text style={{ alignSelf: 'center', color: 'black', fontSize: 15 }}> ผู้ติดตาม </Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity>
               <View style={{ marginRight: '2.5%' }}>
-                <Text style={{ alignSelf: 'center', color: 'black', fontSize: 50 }}> 0 </Text>
+                <Text style={{ alignSelf: 'center', color: 'black', fontSize: 50 }}> {joinAll} </Text>
                 <Text style={{ alignSelf: 'center', color: 'black', fontSize: 15 }}> ปาร์ตี้ทั้งหมด </Text>
               </View>
             </TouchableOpacity>
@@ -86,38 +138,60 @@ export default function storepage({ navigation }) {
             <TouchableOpacity onPress={() => navigation.navigate('storepaymentWaiting')}>
               <View style={{ marginTop: '10%', marginRight: '2.5%' }}>
                 <Image source={require('../../images/waitingpayment.png')} style={styles.statusimage1} />
-                <View style={styles.badge}>
-                  {/* data == 0 ? false :  true */}
+                {onPayment === 0 ? (
+                  null
+                ) : (
+                  <View style={styles.badge}>
+                    {/* data == 0 ? false :  true */}
 
-                  <Text style={styles.badgeText}> 0 </Text>
-                </View>
+                    <Text style={styles.badgeText}> {onPayment} </Text>
+                  </View>
+                )}
                 <Text style={{ alignSelf: 'center', color: 'black' }}> รอการชำระเงิน </Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('storedeliveryWaiting')}>
               <View style={{ marginTop: '12%', marginRight: '2.5%' }}>
                 <Image source={require('../../images/deliverywating.png')} style={styles.statusimage2} />
-                <View style={styles.badge}>
-                  <Text style={styles.badgeText}> 0 </Text>
-                </View>
+                {onSending === 0 ? (
+                  null
+                ) : (
+                  <View style={styles.badge}>
+                    {/* data == 0 ? false :  true */}
+
+                    <Text style={styles.badgeText}> {onSending} </Text>
+                  </View>
+                )}
                 <Text style={{ alignSelf: 'center', color: 'black' }}> รอการจัดส่ง </Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('storedelivery')}>
               <View style={{ marginTop: '13%', marginRight: '2.5%' }}>
                 <Image source={require('../../images/delivery.png')} style={styles.statusimage3} />
-                <View style={styles.badge}>
-                  <Text style={styles.badgeText}> 0 </Text>
-                </View>
+                {onRecieve === 0 ? (
+                  null
+                ) : (
+                  <View style={styles.badge}>
+                    {/* data == 0 ? false :  true */}
+
+                    <Text style={styles.badgeText}> {onRecieve} </Text>
+                  </View>
+                )}
                 <Text style={{ alignSelf: 'center', color: 'black' }}> รอรับสินค้า </Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('storerecieved')}>
               <View style={{ marginTop: '10%', marginRight: '2.5%' }}>
                 <Image source={require('../../images/received.png')} style={styles.statusimage4} />
-                <View style={styles.badge}>
-                  <Text style={styles.badgeText}> 0 </Text>
-                </View>
+                {onSuccessfully === 0 ? (
+                  null
+                ) : (
+                  <View style={styles.badge}>
+                    {/* data == 0 ? false :  true */}
+
+                    <Text style={styles.badgeText}> {onSuccessfully} </Text>
+                  </View>
+                )}
                 <Text style={{ alignSelf: 'center', color: 'black' }}> รายการที่สำเร็จ </Text>
               </View>
             </TouchableOpacity>
@@ -128,7 +202,7 @@ export default function storepage({ navigation }) {
           <View style={{ flex: 3, marginTop: '10%' }}>
             <View style={styles.container}>
               <FlatList
-                data={info}
+                data={partyThisStore}
                 numColumns={2}
                 renderItem={({ item }) => (
                   <View>
@@ -141,7 +215,13 @@ export default function storepage({ navigation }) {
                           <Text style={{ fontSize: 15, color: 'black' }}> / คน </Text>
                         </View>
                         <View style={{ flexDirection: 'row' }}>
-                          <Image source={require('../../images/shirt1.jpg')} style={styles.goodslogo} />
+                          <Image source={require('../../images/store.png')} style={{
+                            width: 30,
+                            height: 30,
+                            borderRadius: 100 / 3,
+                            tintColor: 'black',
+                            marginTop: '1%'
+                          }} />
                           <Text numberOfLines={1} style={{ fontSize: 13, textAlign: 'center', paddingTop: 8 }}> {item.party_store} </Text>
                         </View>
                         <View style={{ flexDirection: 'row' }}>
@@ -149,10 +229,10 @@ export default function storepage({ navigation }) {
                             width: 30,
                             height: 30,
                             borderRadius: 100 / 3,
-                            tintColor: '#6359d5',
+                            tintColor: 'black',
                             marginTop: '1%'
                           }} />
-                          <Text style={{ fontSize: 13, textAlign: 'center', paddingTop: 8, marginLeft: '3%' }}> หารกัน {item.party_limitmember} ชิ้น </Text>
+                          <Text style={{ fontSize: 13, textAlign: 'center', paddingTop: 8, marginLeft: '3%' }}> {item.userjoin} ชิ้น </Text>
                         </View>
                       </View>
                     </TouchableOpacity>

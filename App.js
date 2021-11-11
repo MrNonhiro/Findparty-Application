@@ -11,6 +11,7 @@ import loggedHome from './components/loggedin/loggedHome';
 import registerStore from './components/registerStore';
 import topnavigator from './components/topnavigator';
 import storelogin from './components/storelogin';
+import notipage from './components/notipage';
 
 {
   // loggedin pages
@@ -37,6 +38,7 @@ import storedelivery from './components/storeUser/status/storedelivery';
 import storedeliveryWaiting from './components/storeUser/status/storedeliveryWaiting';
 import storepaymentWaiting from './components/storeUser/status/storepaymentWaiting';
 import storerecieved from './components/storeUser/status/storerecieved';
+import storeSetting from './components/storeUser/storeSetting';
 
 {
   // party page
@@ -66,6 +68,7 @@ const App = () => {
         <Stack.Screen name="loggedHome" component={loggedHome} options={{ headerShown: false }} />
         <Stack.Screen name="registerStore" component={registerStore} options={{ headerShown: false }} />
         <Stack.Screen name="storelogin" component={storelogin} options={{ headerShown: false }} />
+        <Stack.Screen name="notipage" component={notipage} options={{ headerShown: false }} />
 
         {
           // loggedin pages
@@ -92,6 +95,7 @@ const App = () => {
         <Stack.Screen name="storedeliveryWaiting" component={storedeliveryWaiting} options={{ headerShown: false }} />
         <Stack.Screen name="storepaymentWaiting" component={storepaymentWaiting} options={{ headerShown: false }} />
         <Stack.Screen name="storerecieved" component={storerecieved} options={{ headerShown: false }} />
+        <Stack.Screen name="storeSetting" component={storeSetting} options={{ headerShown: false }} />
 
         {
           // store user page

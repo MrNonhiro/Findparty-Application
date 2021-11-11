@@ -13,19 +13,50 @@ import axios from 'axios';
 
 export default function storepage({ navigation }) {
   const [info, setInfo] = useState([]);
-  useEffect(() => {
-    // Post updated, do something with route.params.post
-    // For example, send the post to the server 
+  const [store_id, setStore_id] = useState([]);
+  const [storedata, setStoredata] = useState([]);
+  const [store_name, setUsedisplay] = useState([]);
+  const [store_email, setEmail] = useState([]);
+  const [store_profile, setImage] = useState([]);
+  const [store_commercial, setCommercial] = useState([]);
 
-    axios.get('http://34.124.194.224/showparty.php')
+  const [follow, setFollow] = useState([]);
+  const [joinAll, setJoinAll] = useState([]);
+  const [onPayment, setOnPayment] = useState([]);
+  const [onSending, setonSending] = useState([]);
+  const [onRecieve, setonRecieve] = useState([]);
+  const [onSuccessfully, setonSuccessfully] = useState([]);
+
+  const [partyThisStore, setPartyThisStore] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://34.124.194.224/profile_getdata_for_store.php', {
+      params: {
+        store_id: 1
+      }
+    })
       .then(response => {
-        setInfo(response.data);
+        setStoredata(response.data.all);
+        setUsedisplay(response.data.all.store_name)
+        setImage(response.data.all.store_profile)
+        setFollow(response.data.data.profiledata.allfollow)
+        setJoinAll(response.data.data.profiledata.allparty)
+        setOnPayment(response.data.data.partystatus.onpayment)
+        setonSending(response.data.data.partystatus.onsending)
+        setonRecieve(response.data.data.partystatus.onrecieve)
+        setonSuccessfully(response.data.data.partystatus.successfully)
+
+        setPartyThisStore(response.data.partyThisStore)
+
+
+
       })
       .catch(err => {
         console.log(err)
       })
-  })
 
+  }, [storedata])
+  console.log(store_name)
 
   return (
     <View style={styles.container}>
@@ -41,7 +72,7 @@ export default function storepage({ navigation }) {
               }} />
             </TouchableOpacity>
           </View>}
-        centerComponent={{ text: 'Fashion men shop', style: { color: 'black', fontSize: 25 } }}
+        centerComponent={{ text: {store_name}, style: { color: 'black', fontSize: 25 } }}
         containerStyle={{
           backgroundColor: 'white',
           height: '18%',
@@ -58,7 +89,25 @@ export default function storepage({ navigation }) {
           }}>
             <View style={styles.box2}>
               <Image source={require('../images/shirt1.jpg')} style={styles.image} />
-              <Text style={styles.text2}> Fashion men shop </Text>
+              <Text style={styles.text2}> {store_name} </Text>
+              <TouchableOpacity>
+                <View style={{
+                  marginTop: '4%',
+                  alignSelf: 'center',
+                  backgroundColor: '#6359d5',
+                  borderRadius: 10,
+                  borderColor: '#6359d5',
+                  width: 80,
+                  height: 40,
+                  justifyContent: 'center'
+                }}>
+                  <Text style={{
+                    fontSize: 18,
+                    color: 'white',
+                    alignSelf: 'center'
+                  }}> ติดตาม </Text>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -66,7 +115,7 @@ export default function storepage({ navigation }) {
             flex: 2,
             flexDirection: 'row',
             justifyContent: 'center',
-            marginTop: '20%'
+            marginTop: '45%'
           }}>
             <TouchableOpacity>
               <View style={{ marginRight: '2.5%' }}>
@@ -87,11 +136,11 @@ export default function storepage({ navigation }) {
           <View style={{ flex: 3, marginTop: '10%' }}>
             <View style={styles.container}>
               <FlatList
-                data={info}
+                data={partyThisStore}
                 numColumns={2}
                 renderItem={({ item }) => (
                   <View>
-                    <TouchableOpacity onPress={() => navigation.navigate('partydetail', { id: item.party_id })}>
+                    <TouchableOpacity onPress={() => navigation.navigate('storepartydetail', { id: item.party_id })}>
                       <View style={styles.insidegoodsbox} elevation={5}>
                         <Image source={{ uri: item.party_picture }} style={styles.goodsimage} />
                         <Text numberOfLines={1} style={{ fontSize: 15, width: 200 }}> {item.party_name} </Text>
@@ -111,7 +160,7 @@ export default function storepage({ navigation }) {
                             tintColor: '#6359d5',
                             marginTop: '1%'
                           }} />
-                          <Text style={{ fontSize: 13, textAlign: 'center', paddingTop: 8, marginLeft: '3%' }}> หารกัน {item.party_limitmember} ชิ้น </Text>
+                          <Text style={{ fontSize: 13, textAlign: 'center', paddingTop: 8, marginLeft: '3%' }}> {item.userjoin}  ชิ้น </Text>
                         </View>
                       </View>
                     </TouchableOpacity>

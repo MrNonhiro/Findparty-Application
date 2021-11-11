@@ -17,40 +17,39 @@ import * as FileSystem from 'expo-file-system';
 
 export default function usersetting({ navigation }) {
 
-    const [user_id, setUser_id] = useState();
-    const [userdata, setUserdata] = useState([]);
-    const [username, setUsername] = useState();
-    const [userdisplay, setUsedisplay] = useState();
-    const [user_tel, setUsertel] = useState();
-    const [email, setEmail] = useState();
-    const [user_profile, setImage] = useState();
+    const [store_id, setStore_id] = useState();
+    const [storedata, setStoredata] = useState([]);
+    const [store_username, setStore_username] = useState();
+    const [store_name, setStore_name] = useState();
+    const [store_email, setStore_email] = useState();
+    const [store_profile, setStore_profile] = useState();
     useEffect(() => {
-        AsyncStorage.getItem('user_id')
+        AsyncStorage.getItem('store_id')
             .then((value) => {
-                setUser_id(value);
+                setStore_id(value);
 
             })
     })
     useEffect(() => {
-        axios.get('http://34.124.194.224/profile_getdata_for_user.php', {
+        axios.get('http://34.124.194.224/profile_getdata_for_store.php', {
             params: {
-                user_id: user_id
+                store_id: store_id
             }
         })
             .then(response => {
-                setUserdata(response.data.all);
-                setUsername(response.data.username)
-                setUsedisplay(response.data.user_display)
+                setStoredata(response.data.all);
+                setStore_username(response.data.username)
+                setStore_name(response.data.user_display)
                 setUsertel(response.data.user_tel)
                 setEmail(response.data.email)
-                setImage(response.data.user_profile)             
+                setStore_profile(response.data.user_profile)             
             })
             .catch(err => {
                 console.log(err)
             })
 
-    }, [user_id])
-    console.log(userdata)
+    }, [store_id])
+    console.log(storedata)
 
     const [pickedImagePath, setPickedImagePath] = useState('');
     useEffect(() => {
@@ -190,7 +189,7 @@ export default function usersetting({ navigation }) {
                 <View style={{ flex: 1, width: '100%', marginTop: '6%' }}>
                     <FlatList
                         style={{ marginTop: -40 }}
-                        data={userdata}
+                        data={storedata}
                         renderItem={({ item }) => (
                             <View>
                                 <View style={{
@@ -209,36 +208,19 @@ export default function usersetting({ navigation }) {
                                     <Image source={require('../../images/user.png')} style={styles.userimage} />
                                     <TextInput
                                         style={styles.input}
-                                        value={userdisplay}
-                                        onChangeText={setUsedisplay}
-                                    />
-                                </View>
-                                <View style={styles.detailView}>
-                                    <Image source={require('../../images/phone.png')} style={styles.userimage} />
-                                    <TextInput
-                                        style={styles.input}
-                                        value={user_tel}
-                                        keyboardType="numeric"
-                                        onChangeText={setUsertel}
+                                        value={store_name}
+                                        onChangeText={setStore_name}
                                     />
                                 </View>
                                 <View style={styles.detailView}>
                                     <Image source={require('../../images/emailuser.png')} style={styles.userimage} />
                                     <TextInput
                                         style={styles.input}
-                                        value={email}
-                                        onChangeText={setEmail}
+                                        value={store_email}
+                                        onChangeText={setStore_email}
                                     />
                                 </View>
-                                <TouchableOpacity style={styles.detailView} onPress={() => navigation.navigate('useraddressEdit', { id: item.user_id })}>
-                                    <View style={styles.detailView}>
-                                        <Image source={require('../../images/address.png')} style={styles.userimage} />
-                                        <Text style={{
-                                            color: 'gray'
-                                        }}> ที่อยู่ </Text>
-                                    </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => navigation.navigate('nologinpage', AsyncStorage.removeItem('user_id'))}>
+                                <TouchableOpacity onPress={() => navigation.navigate('storelogin', AsyncStorage.removeItem('stire_id'))}>
                                     <View style={{
                                         backgroundColor: 'red',
                                         alignItems: 'center',

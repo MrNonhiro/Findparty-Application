@@ -12,7 +12,6 @@ import {
   SafeAreaView
 } from 'react-native';
 import axios from 'axios';
-import Topnavigator from './topnavigator';
 
 export default function Home({ navigation }) {
   const [info, setInfo] = useState([]);
@@ -20,7 +19,7 @@ export default function Home({ navigation }) {
     // Post updated, do something with route.params.post
     // For example, send the post to the server 
 
-    axios.get('http://34.124.194.224/showparty.php')
+    axios.get('http://34.124.194.224/home_show_party_list.php')
       .then(response => {
         setInfo(response.data);
       })
@@ -42,24 +41,18 @@ export default function Home({ navigation }) {
               <Image source={require('../images/search.png')} style={styles.icon} />
               <TextInput style={{ marginLeft: '5%' }} placeholder="ค้นหา" />
             </View>
-            <TouchableOpacity onPress={() => Alert.alert("กรุณาเข้าสู่ระบบ")}>
+            <TouchableOpacity onPress={() => navigation.navigate('notipage')}>
               <View style={styles.box2}>
                 <Image source={require('../images/noti.png')} style={styles.noti} />
               </View>
             </TouchableOpacity>
-          </View>
-          <View style={styles.textbox}>
-            {
-              // top navigation
-            }
-
           </View>
         </View>
 
         {
           // promotion
         }
-        <View style={{ flex: 2, height: 200 }}>
+        <View style={{ flex: 2, height: 200, marginTop: '3%' }}>
           <View style={styles.pomobox}>
             <Text style={styles.pomotext}> โปรโมชัน </Text>
             <Image source={require('../images/shirt1.jpg')} style={styles.pomoimage} />
@@ -77,17 +70,23 @@ export default function Home({ navigation }) {
                 data={info}
                 numColumns={2}
                 renderItem={({ item }) => (
-                  <TouchableOpacity onPress={() => navigation.navigate('partydetail', { id: item.party_id })}>
+                  <TouchableOpacity onPress={() => navigation.navigate('partydetail', { id: item.data.party_id })}>
                     <View style={styles.insidegoodsbox} elevation={5}>
-                      <Image source={{ uri: item.party_picture }} style={styles.goodsimage} />
-                      <Text numberOfLines={1} style={{ fontSize: 15, width: 200 }}> {item.party_name} </Text>
+                      <Image source={{ uri: item.data.party_picture }} style={styles.goodsimage} />
+                      <Text numberOfLines={1} style={{ fontSize: 15, width: 200 }}> {item.data.party_name} </Text>
                       <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ fontSize: 15, color: 'red' }}> {item.party_price} B </Text>
+                        <Text style={{ fontSize: 15, color: 'red' }}> {item.data.party_price} B </Text>
                         <Text style={{ fontSize: 15, color: 'black' }}> / คน </Text>
                       </View>
                       <View style={{ flexDirection: 'row' }}>
-                        <Image source={require('../images/shirt1.jpg')} style={styles.goodslogo} />
-                        <Text numberOfLines={1} style={{ fontSize: 13, textAlign: 'center', paddingTop: 8 }}> {item.party_store} </Text>
+                        <Image source={require('../images/store.png')} style={{
+                          width: 30,
+                          height: 30,
+                          borderRadius: 100 / 3,
+                          tintColor: '#6359d5',
+                          marginTop: '1%'
+                        }} />
+                        <Text numberOfLines={1} style={{ fontSize: 13, textAlign: 'center', paddingTop: 8 }}> {item.data.party_store} </Text>
                       </View>
                       <View style={{ flexDirection: 'row' }}>
                         <Image source={require('../images/user.png')} style={{
@@ -97,7 +96,7 @@ export default function Home({ navigation }) {
                           tintColor: '#6359d5',
                           marginTop: '1%'
                         }} />
-                        <Text style={{ fontSize: 13, textAlign: 'center', paddingTop: 8, marginLeft: '3%' }}> หารกัน {item.party_limitmember} ชิ้น </Text>
+                        <Text style={{ fontSize: 13, textAlign: 'center', paddingTop: 8, marginLeft: '3%' }}> หารกัน {item.userjoin} / {item.data.party_limitmember} ชิ้น </Text>
                       </View>
                     </View>
                   </TouchableOpacity>
@@ -213,7 +212,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginBottom: 15,
     alignSelf: 'center',
-    elevation: 20
   },
   goodslogo: {
     width: 35,

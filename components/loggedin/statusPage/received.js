@@ -11,7 +11,7 @@ export default function received({ navigation }) {
         // Post updated, do something with route.params.post
         // For example, send the post to the server 
 
-        axios.get('http://34.124.194.224/showparty.php')
+        axios.get('http://34.124.194.224/showsingle.php')
             .then(response => {
                 setInfo(response.data);
             })
@@ -60,14 +60,30 @@ export default function received({ navigation }) {
                                                 fontSize: 15,
                                                 width: 200,
                                                 marginTop: '2%',
-                                            }}> {item.party_name} </Text>
+                                            }}> EEEEEEEEEEEEEE </Text>
+                                               <Text numberOfLines={1} style={{
+                                                fontSize: 15,
+                                                width: 200,
+                                                marginTop: '2%',
+                                            }}> EEEEEEEEEEEEEE </Text>
                                             <View style={{
                                                 marginTop: '5%'
                                             }}>
                                                 <TouchableOpacity>
-                                                    <Button color="#6359d5" style={{ fontSize: 20 }}
-                                                        title="จ่าย">
-                                                    </Button>
+                                                    <View style={{
+                                                        width: 65,
+                                                        height: 30,
+                                                        backgroundColor: '#6359d5',
+                                                        alignContent: 'center',
+                                                        borderRadius: 10
+                                                    }}>
+                                                        <Text style={{
+                                                            color: 'white',
+                                                            fontSize: 16,
+                                                            alignSelf: 'center',
+                                                            marginTop: '3%'
+                                                        }}> จ่าย </Text>
+                                                    </View>
                                                 </TouchableOpacity>
                                             </View>
                                         </View>

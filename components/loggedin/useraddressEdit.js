@@ -1,43 +1,83 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Platform } from 'react-native';
-import { Header } from 'react-native-elements';
-import * as Location from 'expo-location';
+import {
+    View,
+    Text,
+    StyleSheet,
+    Image,
+    TouchableOpacity,
+    TextInput,
+    FlatList
+} from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { ScrollView } from 'react-native-gesture-handler';
+import { Header, Button, ThemeProvider } from 'react-native-elements'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import * as FileSystem from 'expo-file-system';
 
-export default function useraddressEdit({ navigation }) {
-    const [info, setInfo] = useState([]);
+export default function usersetting({ navigation }) {
+
+    const [user_id, setUser_id] = useState();
+    const [userdata, setUserdata] = useState([]);
+    const [username, setUsername] = useState();
+    const [userdisplay, setUsedisplay] = useState();
+    const [user_tel, setUsertel] = useState();
+    const [email, setEmail] = useState();
+    const [user_profile, setImage] = useState();
     useEffect(() => {
-        // Post updated, do something with route.params.post
-        // For example, send the post to the server 
+        AsyncStorage.getItem('user_id')
+            .then((value) => {
+                setUser_id(value);
 
-        axios.get('http://34.124.194.224/showuser.php', {
+            })
+    })
+    useEffect(() => {
+        axios.get('http://34.124.194.224/profile_getdata_for_user.php', {
             params: {
                 user_id: user_id
             }
         })
             .then(response => {
-                setInfo(response.data);
+                setUserdata(response.data.all);
+                setUsername(response.data.username)
+                setUsedisplay(response.data.user_display)
+                setUsertel(response.data.user_tel)
+                setEmail(response.data.email)
+                setImage(response.data.user_profile)
             })
             .catch(err => {
                 console.log(err)
             })
-    }, [info])
 
+    }, [user_id])
+    console.log(userdata)
+
+    const [pickedImagePath, setPickedImagePath] = useState('');
     useEffect(() => {
-        // Post updated, do something with route.params.post
-        // For example, send the post to the server 
+        (async () => {
+            if (Platform.OS !== 'web') {
+                const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                if (status !== 'granted') {
+                    alert('Sorry, we need camera roll permissions to make this work!');
+                }
+            }
+        })();
+    }, []);
 
-        AsyncStorage.getItem('user_id')
-            .then(response => {
-                setUser_id(response);
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    })
-
-    const [user_id, setUser_id] = useState([]);
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+        const base64 = await FileSystem.readAsStringAsync(result.uri, { encoding: 'base64' });
+        console.log(base64);
+        const base = 'data:image/jpeg;base64,'
+        if (!result.cancelled) {
+            setPickedImagePath(base + base64);
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -62,7 +102,7 @@ export default function useraddressEdit({ navigation }) {
                 }}
                 rightComponent={
                     <View style={{ marginTop: '4%' }}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => { setIsSubmit(true) }}>
                             <Text style={{
                                 color: '#6359d5',
                                 fontSize: 20
@@ -71,100 +111,120 @@ export default function useraddressEdit({ navigation }) {
                     </View>
                 }
             />
-
             <View style={{
-                height: 20,
-                marginTop: '2%',
-                marginLeft: '1%',
-                marginBottom: 10,
-                alignSelf: 'flex-start'
+                flex: 1,
+                width: '100%',
+                alignItems: 'center',
+                alignSelf: 'center',
             }}>
-                <Text style={{
-                    fontSize: 20,
-                    color: 'black',
+                <View style={{ flex: 2, width: '100%' }}>
+                    <FlatList
+                        data={userdata}
+                        renderItem={({ item }) => (
+                            <View>
+                                <View style={styles.map}>
+                                    <Text> map </Text>
+                                </View>
+                                <View>
+                                    <View style={{
+                                        height: 20,
+                                        marginTop: '10%',
+                                        marginBottom: 10,
+                                        alignSelf: 'flex-start'
+                                    }}>
+                                        <Text style={{
+                                            fontSize: 20,
+                                            color: 'black',
 
-                }}> ช่องทางการติดต่อ </Text>
-            </View>
-            <View style={{ flex: 1, width: '100%', marginTop: '6%' }}>
-                <FlatList
-                    style={{ marginTop: -40 }}
-                    data={info}
-                    renderItem={({ item }) => (
-                        <View>
-                            <View style={styles.detailView}>
-                                <Image source={require('../../images/user.png')} style={styles.userimage} />
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder={item.user_display}
-                                />
-                            </View>
-                            <View style={styles.detailView}>
-                                <Image source={require('../../images/phone.png')} style={styles.userimage} />
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="เบอร์โทรศัพท์"
-                                    keyboardType="numeric"
-                                />
-                            </View>
-
-                            <View style={{
-                                height: 20,
-                                marginTop: '8%',
-                                marginLeft: '1%',
-                                marginBottom: 10,
-                                alignSelf: 'flex-start'
-                            }}>
-                                <Text style={{
-                                    fontSize: 20,
-                                    color: 'black',
-
-                                }}> ที่อยู่ </Text>
-                            </View>
-                            <View style={styles.detailView}>
-                                <Text style={styles.paragraph}></Text>
-                            </View>
-                            <View style={styles.detailView}>
-                                <Image source={require('../../images/address.png')} style={styles.userimage} />
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="รายละเอียดที่อยู่"
-                                />
+                                        }}> ข้อมูลส่วนตัว {item.user_display} </Text>
+                                    </View>
+                                    <View style={styles.detailView}>
+                                        <Image source={require('../../images/user.png')} style={styles.userimage} />
+                                        <TextInput
+                                            style={styles.input}
+                                            value={userdisplay}
+                                            onChangeText={setUsedisplay}
+                                        />
+                                    </View>
+                                    <View style={styles.detailView}>
+                                        <Image source={require('../../images/phone.png')} style={styles.userimage} />
+                                        <TextInput
+                                            style={styles.input}
+                                            value={user_tel}
+                                            keyboardType="numeric"
+                                            onChangeText={setUsertel}
+                                        />
+                                    </View>
+                                    <View style={styles.detailView}>
+                                        <Image source={require('../../images/emailuser.png')} style={styles.userimage} />
+                                        <TextInput
+                                            style={styles.input}
+                                            value={email}
+                                            onChangeText={setEmail}
+                                        />
+                                    </View>
+                                </View>
                             </View>
 
-                        </View>
-                    )}
-                />
+                        )}
+                    />
+
+                </View>
             </View>
         </View >
+
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+    },
+    box: {
+        height: 100,
+        padding: 10,
+        backgroundColor: 'white',
+        borderBottomLeftRadius: 25,
+        borderBottomRightRadius: 25,
+        flexDirection: 'row',
+        marginTop: '10%'
+    },
+    box2: {
+        alignItems: 'center',
+        marginTop: '10%'
+    },
+    pictureEdit: {
+        backgroundColor: 'black',
+        marginTop: '5%'
     },
     text: {
         fontSize: 30,
         color: 'black',
         textAlign: 'center',
-        marginTop: '5%',
-        marginLeft: '25%'
+        marginLeft: '11%',
+        marginTop: '4.5%'
     },
-    text2: {
-        fontSize: 30,
-        color: 'black',
-        textAlign: 'center',
-        marginTop: '65%'
+    profileImageBox: {
+        height: '35%',
+        width: '100%',
+        alignItems: 'center'
+    },
+    profileimage: {
+        width: '50%',
+        height: '90%',
+        borderRadius: 120,
+        resizeMode: 'cover',
+        marginTop: '5%'
     },
     detailView: {
         flexDirection: 'row',
         backgroundColor: 'white',
         height: 50,
         width: '100%',
-        marginTop: '1%',
+        marginTop: '1.5%',
         alignItems: 'center',
-        elevation: 3
+        borderBottomWidth: 0.5
     },
     detailFont: {
         fontSize: 15,
@@ -180,6 +240,11 @@ const styles = StyleSheet.create({
     },
     input: {
         marginLeft: '5%'
+    },
+    map: {
+        backgroundColor: 'black',
+        width: '100%',
+        height: 250
     }
 })
     ;
