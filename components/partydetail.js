@@ -15,27 +15,32 @@ import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function partydetail({ navigation, route }) {
-    const [user_id, setUser_id] = useState([]);
+    const [user_id, setUser_id] = useState();
     const [info, setInfo] = useState([]);
     const [userdata, setUserdata] = useState([]);
     const [buttonStatus, setButtonStatus] = useState([]);
+    const [submit, setSubmit] = useState(false);
+    const [submit2, setSubmit2] = useState(false);
+    const [party_id, setParty_id] = useState([]);
     const { id } = route.params;
     useEffect(() => {
         // Post updated, do something with route.params.post
         // For example, send the post to the server 
 
-        axios.get('http:/34.124.194.224/showsingle.php', {
+        axios.get('http://34.124.194.224/party_show_detail.php', {
             params: {
-                id: id
+                party_id: id
             }
         })
             .then(response => {
                 setInfo(response.data);
+
             })
             .catch(err => {
                 console.log(err)
             })
     })
+
 
     useEffect(() => {
         // Post updated, do something with route.params.post
@@ -44,7 +49,7 @@ export default function partydetail({ navigation, route }) {
         axios.get('http:/34.124.194.224/party_button_status_for_user.php', {
             params: {
                 p_id: id,
-                u_id: id
+                u_id: user_id
             }
         })
             .then(response => {
@@ -62,6 +67,8 @@ export default function partydetail({ navigation, route }) {
 
             })
     })
+
+    console.log('btn' + buttonStatus);
 
     useEffect(() => {
         axios.get('http://34.124.194.224/profile_getdata_for_user.php', {
@@ -83,8 +90,6 @@ export default function partydetail({ navigation, route }) {
                 setonSending(response.data.data.partystatus.onsending)
                 setonRecieve(response.data.data.partystatus.onrecieve)
                 setonSuccessfully(response.data.data.partystatus.successfully)
-
-
 
             })
             .catch(err => {
@@ -120,6 +125,61 @@ export default function partydetail({ navigation, route }) {
         }
     }
 
+    useEffect(() => {
+        const authenticate = async () => {
+            axios
+                .post(
+                    "http://34.124.194.224/party_button_action_for_user.php",
+                    {
+                        u_id: user_id,
+                        p_id: id,
+                        action: 1
+                    }
+                )
+                .then((response) => {
+                    if (response.data == "ok") {
+                        setSubmit(false)
+                        alert(response.data);
+                    } else {
+                        alert(response.data);
+                        setSubmit(false)
+                    }
+
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        };
+        if (submit) authenticate();
+    }, [submit]);
+
+    useEffect(() => {
+        const authenticate = async () => {
+            axios
+                .post(
+                    "http://34.124.194.224/party_button_action_for_user.php",
+                    {
+                        u_id: user_id,
+                        p_id: id,
+                        action: 0
+                    }
+                )
+                .then((response) => {
+                    if (response.data == "ok") {
+                        setSubmit2(false)
+                        alert(response.data);
+                    } else {
+                        alert(response.data);
+                        setSubmit2(false)
+                    }
+
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        };
+        if (submit2) authenticate();
+    }, [submit2]);
 
     return (
         <View style={styles.container}>
@@ -146,49 +206,7 @@ export default function partydetail({ navigation, route }) {
                         }}
                     />
                 </View>
-                
-                {/* <View style={styles.imagebox}>
-                    <View style={{
-                        justifyContent: 'center',
-                        width: '100%',
-                        backgroundColor: 'red',
-                        flexDirection: 'row'
-                    }}>
-                        
-                        <FlatList
-                            style={{
-                                width: '100%',
-                                backgroundColor: 'white'
-                            }}
-                            data={info}
-                            renderItem={
-                                ({ item }) => (
-                                    <View style={{
-                                        width: '100%',
-                                        alignSelf: 'center',
-                                        alignItems: 'center',
-                                        alignContent: 'center'
-                                    }}>
 
-                                    </View>
-                                )
-                            }
-                            keyExtractor={(index) => index.toString()}
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            pagingEnabled
-                            bounces={false}
-                            keyExtractor={(item) => item.idgif}
-                            onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], {
-                                useNativeDriver: false,
-                            })}
-                            scrollEventThrottle={32}
-                            onViewableItemsChanged={viewableItemsChanged}
-                            viewabilityConfig={viewConfig}
-                            ref={dataRef}
-                        />
-                    </View> */}
-                            
                 <View style={styles.detailbox}>
                     <FlatList
                         style={{ marginTop: -40 }}
@@ -197,11 +215,17 @@ export default function partydetail({ navigation, route }) {
                         keyExtractor={(items) => items}
                         renderItem={({ item }) => (
                             <View>
-                                <Text style={{ color: 'black', fontSize: 20, marginTop: '3%', fontWeight: 'bold' }}> {item.party_name} </Text>
+                                <View style={{
+                                    marginTop: '4%',
+                                    width: '100%',
+                                }}>
+                                    <Image source={{ uri: item.data.party_picture }} style={styles.goodsimage} />
+                                </View>
+                                <Text style={{ color: 'black', fontSize: 20, marginTop: '3%', fontWeight: 'bold' }}> {item.data.party_name} </Text>
                                 <View style={styles.detailbox}>
                                     <View style={{ flexDirection: 'row', marginTop: '2%' }}>
                                         <Text style={{ fontSize: 16 }}> ประเภท </Text>
-                                        <Text style={{ fontSize: 16, marginLeft: '15%', marginLeft: '21%', fontWeight: 'bold' }}> {item.party_type} </Text>
+                                        <Text style={{ fontSize: 16, marginLeft: '15%', marginLeft: '21%', fontWeight: 'bold' }}> {item.data.party_type} </Text>
                                     </View>
                                     <View style={{ flexDirection: 'row', marginTop: '5%' }}>
                                         <Text style={{ fontSize: 16, color: 'black' }}> วันที่จัดตั้งกลุ่ม </Text>
@@ -209,14 +233,14 @@ export default function partydetail({ navigation, route }) {
                                     </View>
                                     <View style={{ flexDirection: 'row', marginTop: '5%' }}>
                                         <Text style={{ fontSize: 16, color: 'black' }}> ราคาหารต่อคน </Text>
-                                        <Text style={{ fontSize: 16, color: 'black', marginLeft: '10%', fontWeight: 'bold' }}> {item.party_price} </Text>
+                                        <Text style={{ fontSize: 16, color: 'black', marginLeft: '10%', fontWeight: 'bold' }}> {item.data.party_price} </Text>
                                         <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}> บาท </Text>
                                     </View>
                                     <View style={{ flexDirection: 'row', marginTop: '5%' }}>
                                         <Text style={{ fontSize: 16, color: 'black' }}> จำนวนสมาชิกกลุ่ม </Text>
                                         <Text style={{ color: 'red', fontSize: 16, marginLeft: '5%', fontWeight: 'bold' }}> {item.userjoin} </Text>
                                         <Text style={{ fontSize: 16, color: 'black' }}> / </Text>
-                                        <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}> {item.party_limitmember} </Text>
+                                        <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}> {item.data.party_limitmember} </Text>
                                         <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}> คน </Text>
                                     </View>
                                     <View style={{ flexDirection: 'row', marginTop: '5%' }}>
@@ -229,13 +253,13 @@ export default function partydetail({ navigation, route }) {
                                                 marginLeft: '17%',
                                                 fontWeight: 'bold'
                                             }}>
-                                            {item.party_detail}
+                                            {item.data.party_detail}
                                         </Text>
                                     </View>
                                     <View style={{ flexDirection: 'row', width: '100%', marginTop: '2%' }}>
                                         <View >
                                             {buttonStatus == '0' ? (
-                                                <TouchableOpacity onPress={() => Alert.alert("กรุณาเข้าสู่ระบบ")}>
+                                                <TouchableOpacity onPress={() => setSubmit(true)}>
                                                     <View style={{
                                                         backgroundColor: 'red',
                                                         alignItems: 'center',
@@ -256,7 +280,7 @@ export default function partydetail({ navigation, route }) {
                                                     </View>
                                                 </TouchableOpacity>
                                             ) : buttonStatus == '1' ? (
-                                                <TouchableOpacity onPress={() => Alert.alert("กรุณาเข้าสู่ระบบ")}>
+                                                <TouchableOpacity>
                                                     <View style={{
                                                         backgroundColor: 'gray',
                                                         alignItems: 'center',
@@ -277,7 +301,7 @@ export default function partydetail({ navigation, route }) {
                                                     </View>
                                                 </TouchableOpacity>
                                             ) : (
-                                                <TouchableOpacity onPress={() => Alert.alert("กรุณาเข้าสู่ระบบ")}>
+                                                <TouchableOpacity onPress={() => setSubmit2(true)}>
                                                     <View style={{
                                                         backgroundColor: '#6359d5',
                                                         alignItems: 'center',
@@ -300,7 +324,7 @@ export default function partydetail({ navigation, route }) {
                                             )}
                                         </View>
                                         <View>
-                                            <TouchableOpacity onPress={() => navigation.navigate('cmPage')}>
+                                            <TouchableOpacity onPress={() => navigation.navigate('cmPage', { id: item.data.party_id })}>
                                                 <View style={{
                                                     backgroundColor: '#6359d5',
                                                     alignItems: 'center',
@@ -329,7 +353,7 @@ export default function partydetail({ navigation, route }) {
                                         <View style={{ flexDirection: 'row', marginTop: '3%' }}>
                                             <Text style={{ fontSize: 16, fontWeight: 'bold' }}> สร้างกลุ่มโดย </Text>
                                         </View>
-                                        <TouchableOpacity onPress={() => navigation.navigate('storepage', { id: item.store_id })}>
+                                        <TouchableOpacity onPress={() => navigation.navigate('storepage', { id: item.data.store_id })}>
                                             <View style={{ flexDirection: 'row', marginTop: '2%' }}>
                                                 <Image source={require('../images/shirt1.jpg')} style={styles.storelogo} />
                                                 <Text
@@ -337,7 +361,7 @@ export default function partydetail({ navigation, route }) {
                                                         fontSize: 18,
                                                         textAlign: 'center',
                                                         paddingTop: '2%'
-                                                    }}> {item.party_store} </Text>
+                                                    }}> {item.data.party_store} </Text>
                                             </View>
                                         </TouchableOpacity>
                                     </View>

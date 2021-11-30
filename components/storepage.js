@@ -32,7 +32,7 @@ export default function storepage({ navigation }) {
   useEffect(() => {
     axios.get('http://34.124.194.224/profile_getdata_for_store.php', {
       params: {
-        store_id: 1
+        store_id: store_id
       }
     })
       .then(response => {
@@ -140,17 +140,17 @@ export default function storepage({ navigation }) {
                 numColumns={2}
                 renderItem={({ item }) => (
                   <View>
-                    <TouchableOpacity onPress={() => navigation.navigate('storepartydetail', { id: item.party_id })}>
+                    <TouchableOpacity onPress={() => navigation.navigate('storepartydetail', { id: item.data.party_id })}>
                       <View style={styles.insidegoodsbox} elevation={5}>
-                        <Image source={{ uri: item.party_picture }} style={styles.goodsimage} />
-                        <Text numberOfLines={1} style={{ fontSize: 15, width: 200 }}> {item.party_name} </Text>
+                        <Image source={{ uri: item.data.party_picture }} style={styles.goodsimage} />
+                        <Text numberOfLines={1} style={{ fontSize: 15, width: 200 }}> {item.data.party_name} </Text>
                         <View style={{ flexDirection: 'row' }}>
-                          <Text style={{ fontSize: 15, color: 'red' }}> {item.party_price} B </Text>
+                          <Text style={{ fontSize: 15, color: 'red' }}> {item.data.party_price} B </Text>
                           <Text style={{ fontSize: 15, color: 'black' }}> / คน </Text>
                         </View>
                         <View style={{ flexDirection: 'row' }}>
                           <Image source={require('../images/shirt1.jpg')} style={styles.goodslogo} />
-                          <Text numberOfLines={1} style={{ fontSize: 13, textAlign: 'center', paddingTop: 8 }}> {item.party_store} </Text>
+                          <Text numberOfLines={1} style={{ fontSize: 13, textAlign: 'center', paddingTop: 8 }}> {item.data.party_store} </Text>
                         </View>
                         <View style={{ flexDirection: 'row' }}>
                           <Image source={require('../images/user.png')} style={{

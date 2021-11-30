@@ -39,8 +39,7 @@ export default function usersetting({ navigation }) {
             .then(response => {
                 setStoredata(response.data.all);
                 setStore_username(response.data.username)
-                setStore_name(response.data.user_display)
-                setUsertel(response.data.user_tel)
+                setStore_name(response.data.store_display)
                 setEmail(response.data.email)
                 setStore_profile(response.data.user_profile)             
             })
@@ -78,26 +77,6 @@ export default function usersetting({ navigation }) {
         }
     };
 
-    const openCamera = async () => {
-        // Ask the user for the permission to access the camera
-        const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-
-        if (permissionResult.granted === false) {
-            alert("You've refused to allow this appp to access your camera!");
-            return;
-        }
-
-        const result = await ImagePicker.launchCameraAsync();
-
-        // Explore the result
-        console.log(result);
-
-        if (!result.cancelled) {
-            setPickedImagePath(result.uri);
-            console.log(result.uri);
-        }
-    }
-
     return (
         <View style={styles.container}>
             <Header
@@ -112,7 +91,7 @@ export default function usersetting({ navigation }) {
                             }} />
                         </TouchableOpacity>
                     </View>}
-                centerComponent={{ text: 'แก้ไขข้อมูลส่วนตัว', style: { color: 'black', fontSize: 25 } }}
+                centerComponent={{ text: 'แก้ไขข้อมูลร้านค้า', style: { color: 'black', fontSize: 25 } }}
                 containerStyle={{
                     backgroundColor: 'white',
                     height: '18%',
@@ -164,26 +143,6 @@ export default function usersetting({ navigation }) {
                                 </View>
                             </TouchableOpacity>
                         </View>
-
-                        <View style={{ flexDirection: 'row', marginTop: 15, marginLeft: 10 }}>
-                            <TouchableOpacity onPress={openCamera}>
-                                <View style={{
-                                    backgroundColor: '#6359d5',
-                                    height: 40,
-                                    width: 100,
-                                    flexDirection: 'row',
-                                    justifyContent: 'center',
-                                    borderRadius: 15
-                                }}>
-                                    <Image source={require('../../images/camera.png')} style={{ height: 25, width: 25, marginTop: 8 }} />
-                                    <Text style={{
-                                        fontSize: 20,
-                                        color: 'white',
-                                        alignSelf: 'center'
-                                    }}> กล้อง </Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
                     </View>
                 </View>
                 <View style={{ flex: 1, width: '100%', marginTop: '6%' }}>
@@ -210,14 +169,6 @@ export default function usersetting({ navigation }) {
                                         style={styles.input}
                                         value={store_name}
                                         onChangeText={setStore_name}
-                                    />
-                                </View>
-                                <View style={styles.detailView}>
-                                    <Image source={require('../../images/emailuser.png')} style={styles.userimage} />
-                                    <TextInput
-                                        style={styles.input}
-                                        value={store_email}
-                                        onChangeText={setStore_email}
                                     />
                                 </View>
                                 <TouchableOpacity onPress={() => navigation.navigate('storelogin', AsyncStorage.removeItem('stire_id'))}>

@@ -1,39 +1,64 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Animated, FlatList, Button } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Animated, FlatList, Button, ActivityIndicator } from 'react-native';
 import { Header } from 'react-native-elements'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 export default function storerecieved({ navigation }) {
 
     const [info, setInfo] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [store_id, setStore_id] = useState();
+
+    const userid = async () => {
+        try {
+            const userid = await AsyncStorage.getItem('store_id');
+            setStore_id(userid);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    useEffect(() => {
+        userid();
+    });
+
     useEffect(() => {
         // Post updated, do something with route.params.post
         // For example, send the post to the server 
-
-        axios.get('http://34.124.194.224/showparty.php')
+        axios.get('http://34.124.194.224/store_show_party_status.php', {
+            params: {
+                store_id: store_id,
+                status : 4
+            }
+        })
             .then(response => {
                 setInfo(response.data);
+                setLoading(true);
             })
             .catch(err => {
                 console.log(err)
             })
+
     })
+
+    console.log(store_id)
 
     return (
         <View style={styles.container}>
             <Header
-                leftComponent={
-                    <View style={{ marginTop: '8%' }}>
-                        <TouchableOpacity
-                            onPress={() => { navigation.goBack() }}>
-                            <Image source={require('../../../images/back.png')} style={{
-                                height: 25,
-                                width: 25,
-                                tintColor: '#6359d5',
-                            }} />
-                        </TouchableOpacity>
-                    </View>}
+            leftComponent={
+                <View style={{ marginTop: '8%' }}>
+                    <TouchableOpacity
+                        onPress={() => { navigation.goBack() }}>
+                        <Image source={require('../../../images/back.png')} style={{
+                            height: 25,
+                            width: 25,
+                            tintColor: '#6359d5',
+                        }} />
+                    </TouchableOpacity>
+                </View>}
                 centerComponent={{ text: 'รายการที่สำเร็จ', style: { color: 'black', fontSize: 25 } }}
                 containerStyle={{
                     backgroundColor: 'white',
@@ -45,30 +70,51 @@ export default function storerecieved({ navigation }) {
 
             <View style={{ flex: 3 }}>
                 <View style={styles.container}>
-                    <FlatList
-                        data={info}
-                        numColumns={1}
-                        renderItem={({ item }) => (
-                            <View>
-                            <TouchableOpacity onPress={() => navigation.navigate('storepartydetail', { id: item.party_id })}>
-                                <View style={styles.insidegoodsbox} elevation={5}>
-                                    <Image source={{ uri: item.party_picture }} style={styles.goodsimage} />
-                                    <View style={{
-                                        marginLeft: '3%'
-                                    }}>
-                                        <Text numberOfLines={1} style={{
-                                            fontSize: 15,
-                                            width: 200,
-                                            marginTop: '2%',
-                                        }}> {item.party_name} </Text>
-                                        
-                                    </View>
+                    {info == null ? (
+                        <>
+                            <Text style={{
+                                fontSize: 20,
+                                alignSelf: 'center',
+                                marginTop: '10%'
+                            }}>ไม่มีข้อมูล</Text>
+                        </>
+                    ) : (
+                        <>
+                            <FlatList
+                                data={info}
+                                numColumns={1}
+                                renderItem={({ item }) => (
+                                    <View>
+                                        <TouchableOpacity onPress={() => navigation.navigate('partypage', { id: item.party_id })}>
+                                            <View style={styles.insidegoodsbox} elevation={5}>
+                                                <Image source={{ uri: item.data.party_picture == null ? 'https://www.thaipoultry.org/image/about/nonpic.jpg' : item.data.party_picture }} style={styles.goodsimage} />
+                                                <View style={{
+                                                    marginLeft: '3%',
+                                                    justifyContent: 'center'
+                                                }}>
+                                                    <Text numberOfLines={1} style={{
+                                                        fontSize: 15,
+                                                        width: 200,
+                                                        fontWeight: 'bold'
+                                                    }}> {item.data.party_name} </Text>
+                                                    <View style={{
+                                                        marginTop: '2%',
+                                                        flexDirection: 'row'
+                                                    }}>
+                                                        <Text numberOfLines={1} style={{
+                                                            fontSize: 15,
+                                                            width: 200,
+                                                        }}> จำนวนสมาชิกทั้งหมด {item.userjoin} คน </Text>
+                                                    </View>
+                                                </View>
 
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                        )}
-                    />
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+                            />
+                        </>
+                    )}
                 </View>
             </View>
         </View>

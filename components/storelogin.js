@@ -40,7 +40,6 @@ export default function loginpage({ navigation }) {
             alert(JSON.stringify(response.data));
             setIsSubmit(false)
           }
-          console.log(response.data);
           setIsSubmit(false);
         })
         .catch((err) => {

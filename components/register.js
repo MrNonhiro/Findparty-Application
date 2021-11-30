@@ -25,7 +25,7 @@ const register = ({ navigation }) => {
           })
         )
         .then((response) => {
-          if (response.data == "ok") {
+          if (response.data == "สมัครสมาชิกสำเร็จ") {
             setSubmit(false)
             alert(JSON.stringify(response.data));
           } else {
@@ -84,23 +84,17 @@ const register = ({ navigation }) => {
             placeholder="อีเมลล์"
           />
         </View>
-        <View style={styles.detailView}>
-          <Image source={require('../images/user.png')} style={styles.userimage} />
-          <TextInput
-            onChangeText={usernameHandler} style={styles.placeholder}
-            placeholder="ชื่อดิสเพลย์"
-          />
-        </View>
         <View style={styles.buttombox}>
           <Text onPress={() => navigation.navigate('registerStore')} style={{ alignSelf: 'center', marginBottom: '1%' }}> สมัครสมาชิกร้านค้า? </Text>
-          <Text style={{ alignSelf: 'center', marginBottom: '1%' }}> หรือ </Text>
-          <Text onPress={() => navigation.goBack()}> ดำเนินการต่อโดยผู้เยี่ยมชม </Text>
         </View>
         <TouchableOpacity onPress={() => setSubmit(true)}>
           <View style={styles.submit}>
             <Text style={styles.submittext}> สมัครสมาชิก </Text>
           </View>
         </TouchableOpacity>
+        <View style={styles.submit2}>
+            <Text style={styles.submittext2} onPress={() => navigation.goBack()}> ยกเลิก </Text>
+          </View>
       </View>
     </View>
   )
@@ -159,7 +153,7 @@ const styles = StyleSheet.create({
   },
   buttombox: {
     alignSelf: 'center',
-    marginTop: '10%'
+    marginTop: '8%'
   },
   submit: {
     marginTop: '20%',
@@ -185,6 +179,21 @@ const styles = StyleSheet.create({
     elevation: 3,
     borderRadius: 30,
     marginTop: '3%',
+  },
+  submit2: {
+    alignSelf: 'center',
+    backgroundColor: 'red',
+    borderRadius: 25,
+    borderWidth: 10,
+    borderColor: 'red',
+    borderLeftWidth: 29,
+    borderRightWidth: 29,
+    marginTop: '2%',
+    elevation: 3,
+  },
+  submittext2: {
+    fontSize: 25,
+    color: 'white',
   },
 })
 

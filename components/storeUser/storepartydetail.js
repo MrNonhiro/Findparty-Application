@@ -14,21 +14,20 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 export default function partydetail({ navigation, route }) {
     const [info, setInfo] = useState([]);
-    const [userjoin, setUserjoin] = useState([]);
 
     const { id } = route.params;
     useEffect(() => {
         // Post updated, do something with route.params.post
         // For example, send the post to the server 
 
-        axios.get('http://34.124.194.224/showsingle.php', {
+        axios.get('http://34.124.194.224/party_show_detail.php', {
             params: {
-                id: id
+                party_id: id
             }
         })
             .then(response => {
                 setInfo(response.data);
-                setUserjoin(response.data.userjoin);
+       
             })
             .catch(err => {
                 console.log(err)
@@ -149,11 +148,11 @@ export default function partydetail({ navigation, route }) {
                         keyExtractor={(items) => items}
                         renderItem={({ item }) => (
                             <View>
-                                <Text style={{ color: 'black', fontSize: 20, marginTop: '3%', fontWeight: 'bold' }}> {item.party_name} </Text>
+                                <Text style={{ color: 'black', fontSize: 20, marginTop: '3%', fontWeight: 'bold' }}> {item.data.party_name} </Text>
                                 <View style={styles.detailbox}>
                                     <View style={{ flexDirection: 'row', marginTop: '2%' }}>
                                         <Text style={{ fontSize: 16 }}> ประเภท </Text>
-                                        <Text style={{ fontSize: 16, marginLeft: '15%', marginLeft: '21%', fontWeight: 'bold' }}> {item.party_type} </Text>
+                                        <Text style={{ fontSize: 16, marginLeft: '15%', marginLeft: '21%', fontWeight: 'bold' }}> {item.data.party_type} </Text>
                                     </View>
                                     <View style={{ flexDirection: 'row', marginTop: '5%' }}>
                                         <Text style={{ fontSize: 16, color: 'black' }}> วันที่จัดตั้งกลุ่ม </Text>
@@ -161,14 +160,14 @@ export default function partydetail({ navigation, route }) {
                                     </View>
                                     <View style={{ flexDirection: 'row', marginTop: '5%' }}>
                                         <Text style={{ fontSize: 16, color: 'black' }}> ราคาหารต่อคน </Text>
-                                        <Text style={{ fontSize: 16, color: 'black', marginLeft: '10%', fontWeight: 'bold' }}> {item.party_price} </Text>
+                                        <Text style={{ fontSize: 16, color: 'black', marginLeft: '10%', fontWeight: 'bold' }}> {item.data.party_price} </Text>
                                         <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}> บาท </Text>
                                     </View>
                                     <View style={{ flexDirection: 'row', marginTop: '5%' }}>
                                         <Text style={{ fontSize: 16, color: 'black' }}> จำนวนสมาชิกกลุ่ม </Text>
-                                        <Text style={{ color: 'red', fontSize: 16, marginLeft: '5%', fontWeight: 'bold' }}> {userjoin} </Text>
+                                        <Text style={{ color: 'red', fontSize: 16, marginLeft: '5%', fontWeight: 'bold' }}> {item.userjoin} </Text>
                                         <Text style={{ fontSize: 16, color: 'black' }}> / </Text>
-                                        <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}> {item.party_limitmember} </Text>
+                                        <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}> {item.data.party_limitmember} </Text>
                                         <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}> คน </Text>
                                     </View>
                                     <View style={{ flexDirection: 'row', marginTop: '5%' }}>
@@ -181,7 +180,7 @@ export default function partydetail({ navigation, route }) {
                                                 marginLeft: '17%',
                                                 fontWeight: 'bold'
                                             }}>
-                                            {item.party_detail}
+                                            {item.data.party_detail}
                                         </Text>
                                     </View>
 

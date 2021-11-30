@@ -26,6 +26,9 @@ export default function usersetting({ navigation }) {
     const [party_limitmember, setPartylimitmember] = useState('');
     const [party_goodspictures, setPartygoodspictures] = useState('');
     const [submit, setSubmit] = useState(false);
+    const [party_storeId, setParty_storeId] = useState('');
+    
+
 
     const [pickedImagePath, setPickedImagePath] = useState('');
     useEffect(() => {
@@ -50,40 +53,17 @@ export default function usersetting({ navigation }) {
         console.log(base64);
         const base = 'data:image/jpeg;base64,'
         if (!result.cancelled) {
-            setPickedImagePath(base + base64);
+            setPartygoodspictures(base + base64);
         }
     };
 
-    const openCamera = async () => {
-        // Ask the user for the permission to access the camera
-        const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    useEffect(() => {
+        AsyncStorage.getItem('store_id')
+            .then((value) => {
+                setParty_storeId(value);
 
-        if (permissionResult.granted === false) {
-            alert("You've refused to allow this appp to access your camera!");
-            return;
-        }
-
-        const result = await ImagePicker.launchCameraAsync();
-
-        // Explore the result
-        console.log(result);
-
-        if (!result.cancelled) {
-            setPickedImagePath(result.uri);
-            console.log(result.uri);
-        }
-    }
-    // Ask the user for the permission to access the media library 
-
-    {/* let [fontsLoaded] = useFonts({
-        'Inter-SemiBoldItalic': 'https://rsms.me/inter/font-files/Inter-SemiBoldItalic.otf?v=3.12',
-        'bahnschrift': require('./assets/fonts/bahnschrift.ttf'),
-        'FC_Iconic': require('./assets/fonts/FC_IconicBold.ttf'),
-    });
-    if (!fontsLoaded) {
-        return <AppLoading />;
-    }
-    */}
+            })
+    })
 
     useEffect(() => {
         const authenticate = async () => {
@@ -97,12 +77,13 @@ export default function usersetting({ navigation }) {
                         party_detail: party_detail,
                         party_price: party_price,
                         party_limitmember: party_limitmember,
+                        party_goodspictures: party_goodspictures,
                         party_storeId: party_storeId
                     })
                 )
                 .then((response) => {
                     setSubmit(false)
-                    alert(response.data);
+                    console.log(response.data);
                 })
                 .catch((err) => {
                     setSubmit(false)
@@ -112,20 +93,13 @@ export default function usersetting({ navigation }) {
         if (submit) authenticate();
     }, [submit]);
 
-    console.log(submit)
-
-    const partynameHandler = (text) => {
-        setPartyname(text);
-    }
+    console.log(party_storeId)
 
     const [currentDate, setCurrentDate] = useState('');
     useEffect(() => {
         var date = new Date().getDate(); //Current Date
         var month = new Date().getMonth() + 1; //Current Month
         var year = new Date().getFullYear(); //Current Year
-        var hours = new Date().getHours(); //Current Hours
-        var min = new Date().getMinutes(); //Current Minutes
-        var sec = new Date().getSeconds(); //Current Seconds
         setCurrentDate(
             year + '-' + month + '-' + date
         );
@@ -174,8 +148,8 @@ export default function usersetting({ navigation }) {
                 <ScrollView style={{ width: '100%' }}>
                     <View style={styles.profileImageBox}>
                         {
-                            pickedImagePath !== '' && <Image
-                                source={{ uri: pickedImagePath }}
+                            party_goodspictures !== '' && <Image
+                                source={{ uri: party_goodspictures }}
                                 style={styles.profileimage}
                             />
                         }
@@ -200,29 +174,9 @@ export default function usersetting({ navigation }) {
                                 </TouchableOpacity>
                             </View>
 
-                            <View style={{ flexDirection: 'row', marginTop: 15, marginLeft: 10 }}>
-                                <TouchableOpacity onPress={openCamera}>
-                                    <View style={{
-                                        backgroundColor: '#6359d5',
-                                        height: 40,
-                                        width: 100,
-                                        flexDirection: 'row',
-                                        justifyContent: 'center',
-                                        borderRadius: 15
-                                    }}>
-                                        <Image source={require('../../images/camera.png')} style={{ height: 25, width: 25, marginTop: 8 }} />
-                                        <Text style={{
-                                            fontSize: 20,
-                                            color: 'white',
-                                            alignSelf: 'center'
-                                        }}> กล้อง </Text>
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
                         </View>
                     </View>
                     <View style={{ flex: 1, width: '100%', height: 600 }}>
-                        {/* flatlist */}
                         <View style={{
                             height: '300%'
                         }}>
@@ -240,15 +194,15 @@ export default function usersetting({ navigation }) {
                                 }}> ข้อมูลปาร์ตี้ </Text>
                             </View>
                             <View style={styles.detailView}>
-                                <Text> ชื่อปาร์ตี้ </Text>
+                                <Text style={{ fontWeight: 'bold' }}> ชื่อปาร์ตี้ </Text>
                                 <TextInput
                                     style={styles.input}
                                     placeholder="ชื่อปาร์ตี้"
-                                    onChangeText={partynameHandler}
+                                    onChangeText={(text) => setPartyname(text)}
                                 />
                             </View>
                             <View style={styles.detailView}>
-                                <Text> ประเภท </Text>
+                                <Text style={{ fontWeight: 'bold' }}> ประเภท </Text>
                                 <TextInput
                                     style={styles.input}
                                     placeholder="ประเภท"
@@ -256,11 +210,11 @@ export default function usersetting({ navigation }) {
                                 />
                             </View>
                             <View style={styles.detailView}>
-                                <Text> เวลาที่จัดตั้งกลุ่ม </Text>
+                                <Text style={{ fontWeight: 'bold' }}> เวลาที่จัดตั้งกลุ่ม </Text>
                                 <Text style={styles.input} onChangeText={(text) => setPartydate(text)}> {currentDate} </Text>
                             </View>
                             <View style={styles.detailView}>
-                                <Text> ราคาหารต่อคน </Text>
+                                <Text style={{ fontWeight: 'bold' }}> ราคาหารต่อคน </Text>
                                 <TextInput
                                     style={styles.input}
                                     placeholder="ราคาหารต่อคน"
@@ -268,7 +222,7 @@ export default function usersetting({ navigation }) {
                                 />
                             </View>
                             <View style={styles.detailView}>
-                                <Text> จำนวนสมาชิกกลุ่ม </Text>
+                                <Text style={{ fontWeight: 'bold' }}> จำนวนสมาชิกกลุ่ม </Text>
                                 <TextInput
                                     style={styles.input}
                                     placeholder="จำนวนสมาชิกกลุ่ม"
@@ -284,7 +238,7 @@ export default function usersetting({ navigation }) {
                                 alignItems: 'center',
                                 elevation: 3
                             }}>
-                                <Text> รายละเอียด </Text>
+                                <Text style={{ fontWeight: 'bold' }}> รายละเอียด </Text>
                                 <TextInput
                                     style={styles.input}
                                     placeholder="รายละเอียด"

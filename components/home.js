@@ -96,7 +96,7 @@ export default function Home({ navigation }) {
                           tintColor: '#6359d5',
                           marginTop: '1%'
                         }} />
-                        <Text style={{ fontSize: 13, textAlign: 'center', paddingTop: 8, marginLeft: '3%' }}> หารกัน {item.userjoin} / {item.data.party_limitmember} ชิ้น </Text>
+                        <Text style={{ fontSize: 13, textAlign: 'center', paddingTop: 8, marginLeft: '3%' }}> หารกัน {item.userjoin} / {item.data.party_limitmember} คน </Text>
                       </View>
                     </View>
                   </TouchableOpacity>

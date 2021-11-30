@@ -17,18 +17,17 @@ export default function storepage({ navigation }) {
   const [storedata, setStoredata] = useState([]);
   const [store_name, setUsedisplay] = useState([]);
   const [store_email, setEmail] = useState([]);
-  const [store_profile, setImage] = useState([]);
+  const [store_profile, setImage] = useState();
   const [store_commercial, setCommercial] = useState([]);
 
   const [follow, setFollow] = useState([]);
   const [joinAll, setJoinAll] = useState([]);
-  const [onPayment, setOnPayment] = useState([]);
-  const [onSending, setonSending] = useState([]);
-  const [onRecieve, setonRecieve] = useState([]);
-  const [onSuccessfully, setonSuccessfully] = useState([]);
+  const [onPayment, setOnPayment] = useState();
+  const [onSending, setonSending] = useState();
+  const [onRecieve, setonRecieve] = useState();
+  const [onSuccessfully, setonSuccessfully] = useState();
 
   const [partyThisStore, setPartyThisStore] = useState([]);
-
 
 
   useEffect(() => {
@@ -39,33 +38,33 @@ export default function storepage({ navigation }) {
       })
   })
   useEffect(() => {
-    axios.get('http://34.124.194.224/profile_getdata_for_store.php', {
-      params: {
-        store_id: 1
-      }
-    })
-      .then(response => {
-        setStoredata(response.data.all);
-        setUsedisplay(response.data.all.store_name)
-        setImage(response.data.all.store_profile)
-        setFollow(response.data.data.profiledata.allfollow)
-        setJoinAll(response.data.data.profiledata.allparty)
-        setOnPayment(response.data.data.partystatus.onpayment)
-        setonSending(response.data.data.partystatus.onsending)
-        setonRecieve(response.data.data.partystatus.onrecieve)
-        setonSuccessfully(response.data.data.partystatus.successfully)
+    const store = async () => {
+      try {
+        const response = await axios.get('http://34.124.194.224/profile_getdata_for_store.php', {
+          params: {
+            store_id: store_id
+          }
+        })
 
-        setPartyThisStore(response.data.partyThisStore)
+            setStoredata(response.data.all);
+            setUsedisplay(response.data.all.store_name)
+            setImage(response.data.all.store_profile)
+            setFollow(response.data.data.profiledata.allfollow)
+            setJoinAll(response.data.data.profiledata.allparty)
+            setOnPayment(response.data.data.partystatus.onpayment)
+            setonSending(response.data.data.partystatus.onsending)
+            setonRecieve(response.data.data.partystatus.onrecieve)
+            setonSuccessfully(response.data.data.partystatus.successfully)
+            setPartyThisStore(response.data.partyThisStore)
 
-
-
-      })
-      .catch(err => {
+          
+      } catch(err) {
         console.log(err)
-      })
+      }
+    }
+    store();
 
-  }, [storedata])
-  console.log(store_name)
+  })
 
 
   return (
@@ -82,7 +81,15 @@ export default function storepage({ navigation }) {
             </TouchableOpacity>
           </View>
         }
-        centerComponent={{ text: 'Fashion men shop', style: { color: 'black', fontSize: 25 } }}
+        centerComponent={
+          <View>
+            <TouchableOpacity onPress={() => navigation.navigate('addparty')}>
+              <Text style={{
+                fontSize: 24
+              }}> {store_name} </Text>
+            </TouchableOpacity>
+          </View>
+        }
         containerStyle={{
           backgroundColor: 'white',
           height: '18%',
@@ -91,7 +98,7 @@ export default function storepage({ navigation }) {
         }}
         rightComponent={
           <View style={{ marginTop: '4%' }}>
-            <TouchableOpacity onPress={() => navigation.navigate('storeSetting')}>
+            <TouchableOpacity onPress={() => navigation.navigate('storeSetting', { id: store_id })}>
               <Image source={require('../../images/setting.png')} style={{
                 height: 25,
                 width: 25,
@@ -102,14 +109,20 @@ export default function storepage({ navigation }) {
         }
       />
       <ScrollView>
-        <View style={{ flex: 1 }}>
-          { // header 
-          }
+        <View>
           <View style={{
-            height: '13%'
+            height: '16%',
           }}>
             <View style={styles.box2}>
-              <Image source={require('../../images/setting.png')} style={styles.image} />
+              {store_profile == null ? (
+                <>
+                  <Text>ไม่มีรูปภาพ</Text>
+                </>
+              ) : (
+                <>
+                  <Image source={{ uri: store_profile }} style={styles.sprofile} />
+                </>
+              )}
               <Text style={styles.text2}> {store_name} </Text>
             </View>
           </View>
@@ -118,7 +131,7 @@ export default function storepage({ navigation }) {
             flex: 2,
             flexDirection: 'row',
             justifyContent: 'center',
-            marginTop: '15%'
+            marginTop: '25%'
           }}>
             <TouchableOpacity>
               <View style={{ marginRight: '2.5%' }}>
@@ -177,7 +190,7 @@ export default function storepage({ navigation }) {
                     <Text style={styles.badgeText}> {onRecieve} </Text>
                   </View>
                 )}
-                <Text style={{ alignSelf: 'center', color: 'black' }}> รอรับสินค้า </Text>
+                <Text style={{ alignSelf: 'center', color: 'black' }}> กำลังจัดส่ง </Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('storerecieved')}>
@@ -232,7 +245,7 @@ export default function storepage({ navigation }) {
                             tintColor: 'black',
                             marginTop: '1%'
                           }} />
-                          <Text style={{ fontSize: 13, textAlign: 'center', paddingTop: 8, marginLeft: '3%' }}> {item.userjoin} ชิ้น </Text>
+                          <Text style={{ fontSize: 13, textAlign: 'center', paddingTop: 8, marginLeft: '3%' }}> ต้องการสมาชิก {item.party_limitmember} คน </Text>
                         </View>
                       </View>
                     </TouchableOpacity>
@@ -355,6 +368,11 @@ const styles = StyleSheet.create({
   badgeText: {
     color: 'white',
     fontSize: 18
+  },
+  sprofile: {
+    width: '50%',
+    height: '130%',
+    borderRadius: 120,
   }
 })
-  ;
+;

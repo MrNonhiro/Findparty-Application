@@ -166,7 +166,7 @@ export default function userpage({ navigation }) {
                                         <Text style={{ alignSelf: 'center', color: 'black' }}> รอการชำระเงิน </Text>
                                     </View>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => navigation.navigate('deliveryWaiting', {id: item.user_id})}>
+                                <TouchableOpacity onPress={() => navigation.navigate('deliveryWaiting')}>
                                     <View style={{ marginTop: '12%', marginRight: '2.5%' }}>
                                         <Image source={require('../../images/deliverywating.png')} style={styles.statusimage2} />
                                         {onSending === 0 ? (

@@ -1,24 +1,71 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Animated, FlatList, Button } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Animated, FlatList, Button, ActivityIndicator } from 'react-native';
 import { Header } from 'react-native-elements'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function delivery({ navigation }) {
+export default function paymentWating({ navigation }) {
 
     const [info, setInfo] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [user_id, setUser_id] = useState();
+    const [submit, setSubmit] = useState(false);
+    const [party_id, setParty_id] = useState([]);
+
+    const userid = async () => {
+        try {
+            const userid = await AsyncStorage.getItem('user_id');
+            setUser_id(userid);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    useEffect(() => {
+        userid();
+    });
+
     useEffect(() => {
         // Post updated, do something with route.params.post
         // For example, send the post to the server 
-
-        axios.get('http://34.124.194.224/showparty.php')
+        axios.get('http://34.124.194.224/user_show_party_status.php', {
+            params: {
+                user_id: user_id,
+                status: 3
+            }
+        })
             .then(response => {
                 setInfo(response.data);
+                setLoading(true);
             })
             .catch(err => {
                 console.log(err)
             })
+
     })
+
+    useEffect(() => {
+        const Delivery = async () => {
+            try {
+                const res = axios.get('http://34.124.194.224/user_update_status_4.php', {
+                    params: {
+                        party_id: party_id,
+                        u_id: user_id
+                    }    
+                })
+                setSubmit(false)
+            } catch (err) {
+                console.log(err);
+                setSubmit(false)
+            }
+        }
+        if (submit) Delivery();
+    }, [submit]);
+
+
+
+
+    console.log(user_id)
 
     return (
         <View style={styles.container}>
@@ -34,7 +81,7 @@ export default function delivery({ navigation }) {
                             }} />
                         </TouchableOpacity>
                     </View>}
-                centerComponent={{ text: 'รอการชำระ', style: { color: 'black', fontSize: 25 } }}
+                centerComponent={{ text: 'รอรับสินค้า', style: { color: 'black', fontSize: 25 } }}
                 containerStyle={{
                     backgroundColor: 'white',
                     height: '18%',
@@ -45,38 +92,86 @@ export default function delivery({ navigation }) {
 
             <View style={{ flex: 3 }}>
                 <View style={styles.container}>
-                    <FlatList
-                        data={info}
-                        numColumns={1}
-                        renderItem={({ item }) => (
-                            <View>
-                            <TouchableOpacity onPress={() => navigation.navigate('partypage', { id: item.party_id })}>
-                                <View style={styles.insidegoodsbox} elevation={5}>
-                                    <Image source={{ uri: item.party_picture }} style={styles.goodsimage} />
-                                    <View style={{
-                                        marginLeft: '3%'
-                                    }}>
-                                        <Text numberOfLines={1} style={{
-                                            fontSize: 15,
-                                            width: 200,
-                                            marginTop: '2%',
-                                        }}> {item.party_name} </Text>
-                                        <View style={{
-                                            marginTop: '5%'
-                                        }}>
-                                            <TouchableOpacity>
-                                                <Button color="#6359d5" style={{ fontSize: 20 }}
-                                                    title="จ่าย">
-                                                </Button>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
+                    {info == null ? (
+                        <>
+                            <Text style={{
+                                fontSize: 20,
+                                alignSelf: 'center',
+                                marginTop: '10%'
+                            }}>ไม่มีข้อมูล</Text>
+                        </>
+                    ) : (
+                        <>
+                            <FlatList
+                                data={info}
+                                numColumns={1}
+                                renderItem={({ item }) => (
+                                    <View>
+                                        <TouchableOpacity onPress={() => navigation.navigate('partydetail', { id: item.data.party_id })}>
+                                            <View style={styles.insidegoodsbox} elevation={5}>
+                                                <Image source={{ uri: item.data.party_picture == null ? 'https://www.thaipoultry.org/image/about/nonpic.jpg' : item.data.party_picture }} style={styles.goodsimage} />
+                                                <View style={{
+                                                    marginLeft: '3%',
+                                                    justifyContent: 'center'
+                                                }}>
+                                                    <Text numberOfLines={1} style={{
+                                                        fontSize: 15,
+                                                        width: 200,
+                                                        fontWeight: 'bold'
+                                                    }}> {item.data.party_name} </Text>
+                                                    <View style={{
+                                                        marginTop: '2%',
+                                                        flexDirection: 'row'
+                                                    }}>
+                                                        <Text numberOfLines={1} style={{
+                                                            fontSize: 15,
+                                                            width: 200,
+                                                        }}> จำนวนสมาชิกทั้งหมด {item.userjoin} คน </Text>
+                                                    </View>
+                                                    {item.bstatus == true ? (
+                                                        <View style={{
+                                                            backgroundColor: 'gray',
+                                                            width: 140,
+                                                            height: 30,
+                                                            borderRadius: 10,
+                                                            marginTop: '4%',
+                                                            justifyContent: 'center'
+                                                        }}>
+                                                            <Text style={{
+                                                                fontSize: 14,
+                                                                color: 'white',
+                                                                alignSelf: 'center'
+                                                            }}> รับสินค้าเรียบร้อยแล้ว </Text>
+                                                        </View>
+                                                    ) : (
+                                                        <TouchableOpacity
+                                                            onPress={() => { setSubmit(true); setParty_id(item.data.party_id); }}
+                                                        >
+                                                            <View style={{
+                                                                backgroundColor: '#6359d5',
+                                                                width: 120,
+                                                                height: 30,
+                                                                borderRadius: 10,
+                                                                marginTop: '4%',
+                                                                justifyContent: 'center'
+                                                            }}>
+                                                                <Text style={{
+                                                                    fontSize: 14,
+                                                                    color: 'white',
+                                                                    alignSelf: 'center'
+                                                                }}> ยืนยันรับสินค้า </Text>
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                </View>
 
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                        )}
-                    />
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+                            />
+                        </>
+                    )}
                 </View>
             </View>
         </View>

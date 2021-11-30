@@ -24,6 +24,7 @@ export default function usersetting({ navigation }) {
     const [user_tel, setUsertel] = useState();
     const [email, setEmail] = useState();
     const [user_profile, setImage] = useState();
+    const [submit, setSubmit] = useState("");
     useEffect(() => {
         AsyncStorage.getItem('user_id')
             .then((value) => {
@@ -43,7 +44,7 @@ export default function usersetting({ navigation }) {
                 setUsedisplay(response.data.user_display)
                 setUsertel(response.data.user_tel)
                 setEmail(response.data.email)
-                setImage(response.data.user_profile)             
+                setImage(response.data.user_profile)
             })
             .catch(err => {
                 console.log(err)
@@ -75,29 +76,38 @@ export default function usersetting({ navigation }) {
         console.log(base64);
         const base = 'data:image/jpeg;base64,'
         if (!result.cancelled) {
-            setPickedImagePath(base + base64);
+            setImage(base + base64);
         }
     };
 
-    const openCamera = async () => {
-        // Ask the user for the permission to access the camera
-        const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    useEffect(() => {
+        const authenticate = async () => {
+            axios
+                .post(
+                    "http://34.124.194.224/user_edit.php",
+                    JSON.stringify({
+                        username: username,
+                        userdisplay: userdisplay,
+                        user_tel: user_tel,
+                        email: email
+                    })
+                )
+                .then((response) => {
+                    if (response.data == "ok") {
+                        setSubmit(false)
+                        alert(JSON.stringify(response.data));
+                    } else {
+                        alert(JSON.stringify(response.data));
+                        setSubmit(false)
+                    }
 
-        if (permissionResult.granted === false) {
-            alert("You've refused to allow this appp to access your camera!");
-            return;
-        }
-
-        const result = await ImagePicker.launchCameraAsync();
-
-        // Explore the result
-        console.log(result);
-
-        if (!result.cancelled) {
-            setPickedImagePath(result.uri);
-            console.log(result.uri);
-        }
-    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        };
+        if (submit) authenticate();
+    }, [submit]);
 
     return (
         <View style={styles.container}>
@@ -140,53 +150,37 @@ export default function usersetting({ navigation }) {
             }}>
                 <View style={styles.profileImageBox}>
                     {
-                        pickedImagePath !== '' && <Image
-                            source={{ uri: pickedImagePath }}
+                        user_profile !== '' && <Image
+                            source={{ uri: user_profile }}
                             style={styles.profileimage}
                         />
                     }
-                    <View style={{ flexDirection: 'row' }}>
-                        <View style={{ flexDirection: 'row', marginTop: 15 }}>
-                            <TouchableOpacity onPress={pickImage}>
-                                <View style={{
-                                    backgroundColor: '#6359d5',
-                                    height: 40,
-                                    width: 120,
-                                    flexDirection: 'row',
-                                    justifyContent: 'center',
-                                    borderRadius: 15
-                                }}>
-                                    <Image source={require('../../images/gallery.png')} style={{ height: 25, width: 25, marginTop: 8 }} />
-                                    <Text style={{
-                                        fontSize: 20,
-                                        color: 'white',
-                                        alignSelf: 'center'
-                                    }}> แกลลอรี่ </Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={{ flexDirection: 'row', marginTop: 15, marginLeft: 10 }}>
-                            <TouchableOpacity onPress={openCamera}>
-                                <View style={{
-                                    backgroundColor: '#6359d5',
-                                    height: 40,
-                                    width: 100,
-                                    flexDirection: 'row',
-                                    justifyContent: 'center',
-                                    borderRadius: 15
-                                }}>
-                                    <Image source={require('../../images/camera.png')} style={{ height: 25, width: 25, marginTop: 8 }} />
-                                    <Text style={{
-                                        fontSize: 20,
-                                        color: 'white',
-                                        alignSelf: 'center'
-                                    }}> กล้อง </Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
                 </View>
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flexDirection: 'row', marginTop: 15 }}>
+                        <TouchableOpacity
+                            onPress={pickImage}
+                            style={{
+                                backgroundColor: '#6359d5',
+                                height: 40,
+                                width: 120,
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                borderRadius: 10
+                            }}>
+                            <Image source={require('../../images/gallery.png')} style={{ height: 25, width: 25, marginTop: 8 }} />
+                            <Text style={{
+                                fontSize: 20,
+                                color: 'white',
+                                alignSelf: 'center'
+                            }}> แกลลอรี่ </Text>
+
+                        </TouchableOpacity>
+                    </View>
+
+
+                </View>
+
                 <View style={{ flex: 1, width: '100%', marginTop: '6%' }}>
                     <FlatList
                         style={{ marginTop: -40 }}
@@ -203,7 +197,7 @@ export default function usersetting({ navigation }) {
                                         fontSize: 20,
                                         color: 'black',
 
-                                    }}> ข้อมูลส่วนตัว {item.user_display} </Text>
+                                    }}> ข้อมูลส่วนตัว </Text>
                                 </View>
                                 <View style={styles.detailView}>
                                     <Image source={require('../../images/user.png')} style={styles.userimage} />
@@ -238,7 +232,7 @@ export default function usersetting({ navigation }) {
                                         }}> ที่อยู่ </Text>
                                     </View>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => navigation.navigate('nologinpage', AsyncStorage.removeItem('user_id'))}>
+                                <TouchableOpacity onPress={() => navigation.navigate('loginpage', AsyncStorage.removeItem('user_id'))}>
                                     <View style={{
                                         backgroundColor: 'red',
                                         alignItems: 'center',
@@ -316,7 +310,7 @@ const styles = StyleSheet.create({
     profileImageBox: {
         height: '35%',
         width: '100%',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     profileimage: {
         width: '50%',

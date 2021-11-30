@@ -13,6 +13,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { Header, Button, ThemeProvider } from 'react-native-elements'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { ListItem } from 'react-native-elements/dist/list/ListItem';
 
 export default function cmPage({ navigation }) {
 
@@ -56,7 +57,7 @@ export default function cmPage({ navigation }) {
                             marginLeft: '8%'
                         }}> ช่องคอมเม้นท์ </Text>
                     </View>
-                    <TouchableOpacity onPress={() => { navigation.navigate('partymember') }}>
+                    <TouchableOpacity onPress={() => { navigation.navigate('partymember',) }}>
                         <View style={styles.memberButton}>
                             <Text style={{
                                 color: 'white',
